@@ -1,5 +1,6 @@
 # services/document_service.py — like a @Service class in Spring Boot
 import hashlib
+from pydoc import get_pager
 
 from chromadb import Collection
 from fastapi import Depends, UploadFile
@@ -12,16 +13,16 @@ def store_documents(documents: list[str], collection: Collection):
     for document in documents:
         collection.add(
             ids=[hashlib.sha256(document.encode()).hexdigest()],
-            documents=[document],
+            documents=[document]
         )
 
 
 def store_pdf(file: UploadFile, collection: Collection):
-    documents = parse_pdf(file.file)
-    for document in documents:
+    chunks = parse_pdf(file.file)
+    for chunk in chunks:
         collection.add(
-            ids=[hashlib.sha256(document.encode()).hexdigest()],
-            documents=[document],
+            ids=[hashlib.sha256(chunk.encode()).hexdigest()],
+            documents=[chunk],
         )
 
 
