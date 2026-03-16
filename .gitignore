@@ -3,3 +3,8 @@
 
 ### Visual Studio Code ###
 *.vscode
+
+*.env
+.env
+.venv/
+__pycache__/
