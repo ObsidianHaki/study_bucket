@@ -23,13 +23,11 @@ def get_query_service(
             # Step 1: Retrieve relevant documents from ChromaDB
             results = collection.query(query_texts=[question], n_results=3)
             documents = results["documents"][0]  
-            print(f"See content {documents}")
-
             # Step 2: Build a prompt with the retrieved context
             context = "\n\n".join(documents)
             prompt = (
                 "Use the following context to answer the question. "
-                "If the context doesn't contain enough information, say you have no ifnromation about that, so you wont respond.\n\n"
+                "If the context doesn't contain enough information, say you have no ifnromation about that, so you wont respond.Please excuse to the user and advice him to upload relevant data.\n\n"
                 f"--- Context ---\n{context}\n\n"
                 f"--- Question ---\n{question}"
             )
