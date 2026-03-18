@@ -6,5 +6,5 @@ query_router = APIRouter()
 
 
 @query_router.post("/query")
-def send_query(question: list[str], service=Depends(get_query_service)):
-    return service.query(question)["documents"]
+def send_query(question: str, service=Depends(get_query_service)):
+    return service.query(question)
