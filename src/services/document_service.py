@@ -6,7 +6,7 @@ from chromadb import Collection
 from fastapi import Depends, UploadFile
 
 from ..util.file_parser import parse_pdf
-from ..db.chroma_client import get_collection
+from ..db.vector_db.chroma_client import get_collection
 
 
 def store_documents(documents: list[str], collection: Collection):
