@@ -1,0 +1,1128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>luni</title>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #000000;
+            --bg-secondary: #0a0a0a;
+            --bg-tertiary: #111111;
+            --bg-card: #141414;
+            --accent-primary: #7c3aed;
+            --accent-secondary: #a855f7;
+            --accent-glow: rgba(124, 58, 237, 0.3);
+            --text-primary: #e2e8f0;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --border-color: #1e1e1e;
+            --success: #22c55e;
+            --error: #ef4444;
+            --user-bubble: #7c3aed;
+            --bot-bubble: #141414;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary));
+            border-bottom: 1px solid var(--border-color);
+            padding: 16px 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-shrink: 0;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .logo {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px var(--accent-glow);
+        }
+
+        .logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .header-title h1 {
+            font-size: 22px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-secondary), #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .header-title p {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 1px;
+        }
+
+        .header-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--success);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Main layout */
+        .main-container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 320px;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .sidebar-header h2 {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .sidebar-header p {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        /* Upload area */
+        .upload-area {
+            margin: 20px;
+            border: 2px dashed var(--border-color);
+            border-radius: 16px;
+            padding: 32px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: rgba(124, 58, 237, 0.03);
+        }
+
+        .upload-area:hover,
+        .upload-area.dragover {
+            border-color: var(--accent-primary);
+            background: rgba(124, 58, 237, 0.08);
+            box-shadow: 0 0 30px rgba(124, 58, 237, 0.1);
+        }
+
+        .upload-icon {
+            width: 56px;
+            height: 56px;
+            margin: 0 auto 14px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .upload-icon svg {
+            width: 28px;
+            height: 28px;
+            stroke: white;
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .upload-area h3 {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .upload-area p {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .upload-area input {
+            display: none;
+        }
+
+        /* File list */
+        .file-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0 20px 20px;
+        }
+
+        .file-list-title {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+        }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 14px;
+            background: var(--bg-card);
+            border-radius: 12px;
+            margin-bottom: 8px;
+            border: 1px solid var(--border-color);
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .file-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: rgba(239, 68, 68, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .file-icon svg {
+            width: 18px;
+            height: 18px;
+            stroke: #ef4444;
+            fill: none;
+            stroke-width: 2;
+        }
+
+        .file-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .file-name {
+            font-size: 13px;
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .file-status {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .file-status.success { color: var(--success); }
+        .file-status.error { color: var(--error); }
+        .file-status.uploading { color: var(--accent-secondary); }
+
+        /* Chat area */
+        .chat-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: var(--bg-primary);
+        }
+
+        /* Messages */
+        .messages-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px 32px;
+            scroll-behavior: smooth;
+        }
+
+        .welcome-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            text-align: center;
+            gap: 16px;
+        }
+
+        .welcome-logo {
+            width: 80px;
+            height: 80px;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 8px 40px var(--accent-glow);
+        }
+
+        .welcome-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .welcome-screen h2 {
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--text-primary), var(--accent-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .welcome-screen p {
+            font-size: 15px;
+            color: var(--text-muted);
+            max-width: 420px;
+            line-height: 1.6;
+        }
+
+        .welcome-hints {
+            display: flex;
+            gap: 10px;
+            margin-top: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .hint-chip {
+            padding: 10px 18px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .hint-chip:hover {
+            border-color: var(--accent-primary);
+            color: var(--accent-secondary);
+            background: rgba(124, 58, 237, 0.08);
+        }
+
+        /* Message bubbles */
+        .message {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+            max-width: 85%;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .message.user {
+            margin-left: auto;
+            flex-direction: row-reverse;
+        }
+
+        .message-avatar {
+            width: 34px;
+            height: 34px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 600;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .message.bot .message-avatar {
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            overflow: hidden;
+        }
+
+        .message.bot .message-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .message.user .message-avatar {
+            background: var(--bg-tertiary);
+            color: var(--text-secondary);
+        }
+
+        .message-content {
+            padding: 14px 18px;
+            border-radius: 16px;
+            font-size: 14px;
+            line-height: 1.65;
+        }
+
+        .message.bot .message-content {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-top-left-radius: 4px;
+        }
+
+        .message.user .message-content {
+            background: linear-gradient(135deg, var(--accent-primary), #6d28d9);
+            color: white;
+            border-top-right-radius: 4px;
+        }
+
+        /* Markdown styles in bot messages */
+        .message.bot .message-content h1,
+        .message.bot .message-content h2,
+        .message.bot .message-content h3 {
+            margin: 16px 0 8px;
+            font-weight: 600;
+        }
+
+        .message.bot .message-content h1 { font-size: 20px; }
+        .message.bot .message-content h2 { font-size: 17px; }
+        .message.bot .message-content h3 { font-size: 15px; }
+
+        .message.bot .message-content p {
+            margin: 8px 0;
+        }
+
+        .message.bot .message-content ul,
+        .message.bot .message-content ol {
+            margin: 8px 0;
+            padding-left: 22px;
+        }
+
+        .message.bot .message-content li {
+            margin: 4px 0;
+        }
+
+        .message.bot .message-content code {
+            background: rgba(124, 58, 237, 0.15);
+            padding: 2px 7px;
+            border-radius: 5px;
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+            font-size: 13px;
+        }
+
+        .message.bot .message-content pre {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 14px 18px;
+            margin: 12px 0;
+            overflow-x: auto;
+        }
+
+        .message.bot .message-content pre code {
+            background: none;
+            padding: 0;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .message.bot .message-content blockquote {
+            border-left: 3px solid var(--accent-primary);
+            padding-left: 14px;
+            margin: 10px 0;
+            color: var(--text-secondary);
+        }
+
+        .message.bot .message-content table {
+            border-collapse: collapse;
+            margin: 12px 0;
+            width: 100%;
+        }
+
+        .message.bot .message-content th,
+        .message.bot .message-content td {
+            border: 1px solid var(--border-color);
+            padding: 8px 12px;
+            text-align: left;
+            font-size: 13px;
+        }
+
+        .message.bot .message-content th {
+            background: var(--bg-primary);
+            font-weight: 600;
+        }
+
+        .message.bot .message-content a {
+            color: var(--accent-secondary);
+            text-decoration: none;
+        }
+
+        .message.bot .message-content a:hover {
+            text-decoration: underline;
+        }
+
+        /* Thinking indicator */
+        .thinking-indicator {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding: 4px 0;
+        }
+
+        .thinking-dots {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .thinking-dots span {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent-secondary);
+            animation: thinkingPulse 1.8s ease-in-out infinite;
+        }
+
+        .thinking-dots span:nth-child(2) { animation-delay: 0.3s; }
+        .thinking-dots span:nth-child(3) { animation-delay: 0.6s; }
+
+        @keyframes thinkingPulse {
+            0%, 100% { opacity: 0.2; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        .thinking-status {
+            font-size: 12px;
+            color: var(--text-muted);
+            animation: fadeInOut 2s ease-in-out infinite;
+            min-height: 18px;
+        }
+
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        /* Shimmer skeleton lines while thinking */
+        .thinking-skeleton {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 4px;
+        }
+
+        .skeleton-line {
+            height: 12px;
+            border-radius: 6px;
+            background: linear-gradient(90deg, var(--bg-tertiary) 25%, rgba(124, 58, 237, 0.1) 50%, var(--bg-tertiary) 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s ease-in-out infinite;
+        }
+
+        .skeleton-line:nth-child(1) { width: 85%; }
+        .skeleton-line:nth-child(2) { width: 65%; animation-delay: 0.15s; }
+        .skeleton-line:nth-child(3) { width: 75%; animation-delay: 0.3s; }
+
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* Typewriter cursor for streaming effect */
+        .typewriter-cursor::after {
+            content: '\2588';
+            color: var(--accent-secondary);
+            animation: blink 0.7s step-end infinite;
+            font-weight: 300;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* Input area thinking state */
+        .input-wrapper.thinking {
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 20px rgba(124, 58, 237, 0.15);
+        }
+
+        .input-wrapper.thinking::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 2px;
+            width: 100%;
+            background: linear-gradient(90deg, transparent, var(--accent-secondary), transparent);
+            animation: inputProgress 2s ease-in-out infinite;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        /* Send button thinking animation */
+        .send-btn.thinking {
+            animation: sendPulse 1.5s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        .send-btn.thinking svg {
+            animation: spin 1.2s linear infinite;
+        }
+
+        @keyframes sendPulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(124, 58, 237, 0.4); }
+            50% { box-shadow: 0 0 0 10px rgba(124, 58, 237, 0); }
+        }
+
+        @keyframes inputProgress {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        /* Input area */
+        .input-area {
+            padding: 16px 32px 24px;
+            border-top: 1px solid var(--border-color);
+            background: var(--bg-secondary);
+        }
+
+        .input-wrapper {
+            display: flex;
+            align-items: flex-end;
+            gap: 12px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 6px 6px 6px 18px;
+            transition: border-color 0.2s ease;
+        }
+
+        .input-wrapper:focus-within {
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 20px rgba(124, 58, 237, 0.1);
+        }
+
+        .input-wrapper textarea {
+            flex: 1;
+            background: none;
+            border: none;
+            outline: none;
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            line-height: 1.5;
+            resize: none;
+            max-height: 120px;
+            padding: 10px 0;
+        }
+
+        .input-wrapper textarea::placeholder {
+            color: var(--text-muted);
+        }
+
+        .send-btn {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all 0.2s ease;
+        }
+
+        .send-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px var(--accent-glow);
+        }
+
+        .send-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .send-btn svg {
+            width: 20px;
+            height: 20px;
+            stroke: white;
+            fill: none;
+            stroke-width: 2;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-muted);
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            padding: 14px 20px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 500;
+            color: white;
+            z-index: 1000;
+            animation: toastIn 0.3s ease, toastOut 0.3s ease 2.7s forwards;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .toast.success { background: var(--success); }
+        .toast.error { background: var(--error); }
+
+        @keyframes toastIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes toastOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar { width: 260px; }
+            .messages-container { padding: 16px; }
+            .input-area { padding: 12px 16px 16px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-left">
+            <div class="logo"><img src="/static/Luni_logo.png" alt="luni logo"></div>
+            <div class="header-title">
+                <h1>luni</h1>
+                <p>Your intelligent study companion</p>
+            </div>
+        </div>
+        <div class="header-status">
+            <div class="status-dot"></div>
+            Online
+        </div>
+    </header>
+
+    <!-- Main -->
+    <div class="main-container">
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>Knowledge Base</h2>
+                <p>Upload PDFs to teach luni</p>
+                <p style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">Single files or entire folders</p>
+            </div>
+
+            <div class="upload-area" id="uploadArea">
+                <div class="upload-icon">
+                    <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                </div>
+                <h3>Upload PDF</h3>
+                <p>Drag & drop or click to browse</p>
+                <input type="file" id="fileInput" accept=".pdf">
+            </div>
+
+            <div class="upload-area" id="uploadFolderArea">
+                <div class="upload-icon">
+                    <svg viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+                </div>
+                <h3>Upload Folder</h3>
+                <p>Select a folder with PDFs</p>
+                <input type="file" id="folderInput" webkitdirectory directory multiple>
+            </div>
+
+            <div class="file-list" id="fileList">
+                <div class="file-list-title">Uploaded Files</div>
+            </div>
+        </aside>
+
+        <!-- Chat -->
+        <main class="chat-area">
+            <div class="messages-container" id="messagesContainer">
+                <div class="welcome-screen" id="welcomeScreen">
+                    <div class="welcome-logo"><img src="/static/Luni_logo.png" alt="luni logo"></div>
+                    <h2>Welcome to luni</h2>
+                    <p>Upload your study materials and ask me anything. I can render markdown and code blocks for you.</p>
+                    <div class="welcome-hints">
+                        <div class="hint-chip" onclick="setQuestion('Summarize the uploaded document')">Summarize document</div>
+                        <div class="hint-chip" onclick="setQuestion('What are the key concepts?')">Key concepts</div>
+                        <div class="hint-chip" onclick="setQuestion('Explain the key topics in detail')">Explain topics</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="input-area">
+                <div class="input-wrapper">
+                    <textarea id="questionInput" placeholder="Ask luni anything..." rows="1" onkeydown="handleKeyDown(event)"></textarea>
+                    <button class="send-btn" id="sendBtn" onclick="sendMessage()">
+                        <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+
+    <script>
+        const API_BASE = window.location.origin;
+
+        // --- Upload ---
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const fileList = document.getElementById('fileList');
+
+        uploadArea.addEventListener('click', () => fileInput.click());
+        uploadArea.addEventListener('dragover', e => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+        uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('dragover'));
+        uploadArea.addEventListener('drop', e => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            const file = e.dataTransfer.files[0];
+            if (file && file.type === 'application/pdf') uploadFile(file);
+            else showToast('Please upload a PDF file', 'error');
+        });
+        fileInput.addEventListener('change', () => {
+            if (fileInput.files[0]) uploadFile(fileInput.files[0]);
+        });
+
+        // --- Folder Upload ---
+        const uploadFolderArea = document.getElementById('uploadFolderArea');
+        const folderInput = document.getElementById('folderInput');
+
+        uploadFolderArea.addEventListener('click', () => folderInput.click());
+        folderInput.addEventListener('change', () => {
+            const files = Array.from(folderInput.files).filter(f => f.name.endsWith('.pdf'));
+            if (files.length === 0) {
+                showToast('No PDF files found in folder', 'error');
+                return;
+            }
+            showToast(`Uploading ${files.length} PDF(s)...`, 'success');
+            files.forEach(f => uploadFile(f));
+            folderInput.value = '';
+        });
+
+        async function uploadFile(file) {
+            const itemId = 'file-' + Date.now();
+            addFileItem(itemId, file.name, 'Uploading...', 'uploading');
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            try {
+                const res = await fetch(`${API_BASE}/uploadfile`, { method: 'POST', body: formData });
+                if (!res.ok) throw new Error(`Upload failed (${res.status})`);
+                updateFileStatus(itemId, 'Processed & indexed', 'success');
+                showToast(`${file.name} uploaded successfully`, 'success');
+            } catch (err) {
+                updateFileStatus(itemId, 'Upload failed', 'error');
+                showToast(err.message, 'error');
+            }
+            fileInput.value = '';
+        }
+
+        function addFileItem(id, name, status, statusClass) {
+            const div = document.createElement('div');
+            div.className = 'file-item';
+            div.id = id;
+            div.innerHTML = `
+                <div class="file-icon">
+                    <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                </div>
+                <div class="file-info">
+                    <div class="file-name">${name}</div>
+                    <div class="file-status ${statusClass}">${status}</div>
+                </div>`;
+            fileList.appendChild(div);
+        }
+
+        function updateFileStatus(id, status, statusClass) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            const s = el.querySelector('.file-status');
+            s.textContent = status;
+            s.className = 'file-status ' + statusClass;
+        }
+
+        // --- Chat ---
+        const messagesContainer = document.getElementById('messagesContainer');
+        const questionInput = document.getElementById('questionInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const welcomeScreen = document.getElementById('welcomeScreen');
+
+        // Auto-resize textarea
+        questionInput.addEventListener('input', () => {
+            questionInput.style.height = 'auto';
+            questionInput.style.height = Math.min(questionInput.scrollHeight, 120) + 'px';
+        });
+
+        function setQuestion(q) {
+            questionInput.value = q;
+            questionInput.focus();
+        }
+
+        function handleKeyDown(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        }
+
+        const thinkingStatuses = [
+            'Analyzing your question...',
+            'Searching knowledge base...',
+            'Reading through documents...',
+            'Connecting the dots...',
+            'Preparing response...',
+        ];
+
+        let thinkingInterval = null;
+
+        function startThinkingStatus(el) {
+            let idx = 0;
+            const statusEl = el.querySelector('.thinking-status');
+            if (!statusEl) return;
+            statusEl.textContent = thinkingStatuses[0];
+            thinkingInterval = setInterval(() => {
+                idx = (idx + 1) % thinkingStatuses.length;
+                statusEl.style.opacity = '0';
+                setTimeout(() => {
+                    statusEl.textContent = thinkingStatuses[idx];
+                    statusEl.style.opacity = '1';
+                }, 200);
+            }, 2500);
+        }
+
+        function stopThinkingStatus() {
+            if (thinkingInterval) {
+                clearInterval(thinkingInterval);
+                thinkingInterval = null;
+            }
+        }
+
+        async function sendMessage() {
+            const question = questionInput.value.trim();
+            if (!question) return;
+
+            // Hide welcome
+            if (welcomeScreen) welcomeScreen.style.display = 'none';
+
+            // User message
+            appendMessage(question, 'user');
+            questionInput.value = '';
+            questionInput.style.height = 'auto';
+            sendBtn.disabled = true;
+
+            // Add thinking state to input area
+            const inputWrapper = document.querySelector('.input-wrapper');
+            inputWrapper.classList.add('thinking');
+            sendBtn.classList.add('thinking');
+            sendBtn.innerHTML = '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none" stroke="white" stroke-width="2" stroke-dasharray="40 20" /></svg>';
+            questionInput.placeholder = 'luni is thinking...';
+
+            // Thinking indicator in chat
+            const thinkingEl = appendThinking();
+            startThinkingStatus(thinkingEl);
+
+            try {
+                const res = await fetch(`${API_BASE}/query?question=${encodeURIComponent(question)}`, {
+                    method: 'POST',
+                });
+                if (!res.ok) throw new Error(`Error (${res.status})`);
+                const data = await res.json();
+                stopThinkingStatus();
+                thinkingEl.remove();
+                appendMessageWithTypewriter(data, 'bot');
+            } catch (err) {
+                stopThinkingStatus();
+                thinkingEl.remove();
+                appendMessage('Sorry, something went wrong. Please try again.', 'bot');
+                showToast(err.message, 'error');
+            }
+            inputWrapper.classList.remove('thinking');
+            sendBtn.classList.remove('thinking');
+            sendBtn.innerHTML = '<svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>';
+            sendBtn.disabled = false;
+            questionInput.placeholder = 'Ask luni anything...';
+            questionInput.focus();
+        }
+
+        function appendMessage(text, role) {
+            const msg = document.createElement('div');
+            msg.className = `message ${role}`;
+
+            const avatar = document.createElement('div');
+            avatar.className = 'message-avatar';
+            if (role === 'bot') {
+                avatar.innerHTML = '<img src="/static/Luni_logo.png" alt="luni">';
+            } else {
+                avatar.textContent = 'U';
+            }
+
+            const content = document.createElement('div');
+            content.className = 'message-content';
+
+            if (role === 'bot') {
+                content.innerHTML = renderContent(text);
+            } else {
+                content.textContent = text;
+            }
+
+            msg.appendChild(avatar);
+            msg.appendChild(content);
+            messagesContainer.appendChild(msg);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        function appendThinking() {
+            const msg = document.createElement('div');
+            msg.className = 'message bot';
+            msg.innerHTML = `
+                <div class="message-avatar"><img src="/static/Luni_logo.png" alt="luni"></div>
+                <div class="message-content">
+                    <div class="thinking-indicator">
+                        <div class="thinking-dots"><span></span><span></span><span></span></div>
+                        <div class="thinking-status" style="transition: opacity 0.2s ease;">Analyzing your question...</div>
+                        <div class="thinking-skeleton">
+                            <div class="skeleton-line"></div>
+                            <div class="skeleton-line"></div>
+                            <div class="skeleton-line"></div>
+                        </div>
+                    </div>
+                </div>`;
+            messagesContainer.appendChild(msg);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            return msg;
+        }
+
+        function appendMessageWithTypewriter(text, role) {
+            const msg = document.createElement('div');
+            msg.className = `message ${role}`;
+
+            const avatar = document.createElement('div');
+            avatar.className = 'message-avatar';
+            avatar.innerHTML = '<img src="/static/Luni_logo.png" alt="luni">';
+
+            const content = document.createElement('div');
+            content.className = 'message-content typewriter-cursor';
+
+            msg.appendChild(avatar);
+            msg.appendChild(content);
+            messagesContainer.appendChild(msg);
+
+            const rendered = renderContent(text);
+            // Type out the HTML in chunks for a streaming feel
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = rendered;
+            const fullText = tempDiv.textContent || '';
+
+            let charIdx = 0;
+            const chunkSize = 3;
+            const speed = 12;
+
+            function typeChunk() {
+                if (charIdx >= fullText.length) {
+                    // Done typing — show full rendered markdown
+                    content.classList.remove('typewriter-cursor');
+                    content.innerHTML = rendered;
+                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                    return;
+                }
+                charIdx = Math.min(charIdx + chunkSize, fullText.length);
+                content.textContent = fullText.substring(0, charIdx);
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                requestAnimationFrame(() => setTimeout(typeChunk, speed));
+            }
+            typeChunk();
+        }
+
+        // --- Markdown rendering ---
+        function renderContent(text) {
+            return marked.parse(text);
+        }
+
+        // --- Toast ---
+        function showToast(msg, type) {
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.textContent = msg;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+    </script>
+</body>
+</html>
