@@ -1,5 +1,4 @@
 from fastapi import APIRouter, Depends
-
 from ...services.query_service import get_query_service
 
 query_router = APIRouter()
