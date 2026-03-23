@@ -6,7 +6,7 @@ from sympy import Q, im
 
 from ..db.vector_db.chroma_client import get_collection
 from ..ai.anthropic_agent import get_anthropic_agent
-from ..db.redis_db.redis_caching import save_query_and_response, get_previous_messages
+from ..db.redis_db.redis_caching import save_query_and_response, cache_previous_messages
 
 
 def get_query_service(
@@ -29,7 +29,7 @@ def get_query_service(
 
             context = "\n\n".join(documents)
 
-            previous_message = get_previous_messages()
+            previous_message = cache_previous_messages()
 
             prompt = f"""
             You are a helpful assistant that answers questions based strictly on the provided context.
