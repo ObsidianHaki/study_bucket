@@ -1,6 +1,12 @@
-import redis
 
-pool = redis.ConnectionPool(host="localhost", port=6379, decode_responses=True)
+import redis
+import os
+from dotenv import load_dotenv
+load_dotenv()
+
+
+
+pool = redis.ConnectionPool(host=os.environ.get("REDIS_HOST"), port=os.environ.get("REDIS_PORT"), decode_responses=True)
 r = redis.Redis(connection_pool=pool)
 
 

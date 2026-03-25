@@ -12,14 +12,7 @@ from ..db.redis_db.redis_caching import save_query_and_response, cache_previous_
 def get_query_service(
     collection: Collection = Depends(get_collection), agent=Depends(get_anthropic_agent)
 ):
-    """
-    Depends injects both the ChromaDB collection AND the GeminiAgent.
-
-    This is like Spring Boot constructor injection:
-        @Service
-        public QueryService(Collection collection, GeminiAgent agent) { ... }
-    """
-
+   
     class QueryService:
         def query(self, question: str) -> str:
             # Step 1: Retrieve relevant documents from ChromaDB
