@@ -22,7 +22,6 @@ app.include_router(query_router)
 frontend_dir = Path(__file__).parent.parent / "frontend"
 app.mount("/static", StaticFiles(directory=frontend_dir), name="static")
 
-
 @app.get("/")
 def serve_frontend():
     return FileResponse(frontend_dir / "index.html")
