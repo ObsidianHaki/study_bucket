@@ -17,10 +17,11 @@ def get_query_service(
         def query(self, question: str) -> str:
             # Step 1: Retrieve relevant documents from ChromaDB
             results = collection.query(query_texts=[question], n_results=3)
-            documents = results["documents"][0]
+            documents = results["documents"][0] #TODO: check why 2 Diemnsions and Y=0
             # Step 2: Build a prompt with the retrieved context
 
             context = "\n\n".join(documents)
+            metadatas="\n\n".join(str(metadata) for metadata in results["metadatas"][0])
 
             previous_message = cache_previous_messages()
 
@@ -33,9 +34,13 @@ def get_query_service(
             3. **Refusal Protocol**: If you cannot find the answer, respond exactly with: "I'm sorry, but I don't have enough information in the uploaded documents to answer that. Please upload more relevant data so I can assist you better."
             4. **Citations**: (Optional) If you find the answer, mention which part of the context it came from.
             5. **Hisotry**: Use the chat history to give the user proper answers based on passed infromations.
+            6. **Metadatas**: Provides information about the source of the data and the referenced page number. Consdier to tell the user where the source information is coming from.
 
             ### Chat History:
             {previous_message}
+
+            ### Metadata:
+            {metadatas}
         
 
             ### Context:
@@ -46,6 +51,7 @@ def get_query_service(
 
 
             """
+            print(f"Log to validate Prompt: {prompt}")
             llm_response = agent.generate(prompt)
             save_query_and_response(query=question, response=llm_response)
             return llm_response
