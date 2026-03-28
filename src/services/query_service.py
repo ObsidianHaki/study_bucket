@@ -2,7 +2,10 @@
 
 from chromadb import Collection
 from fastapi import Depends
-from sympy import Q, im
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 from ..db.vector_db.chroma_client import get_collection
 from ..ai.anthropic_agent import get_anthropic_agent
@@ -51,9 +54,11 @@ def get_query_service(
 
 
             """
-            print(f"Log to validate Prompt: {prompt}")
+            logger.info("Prompt sent to LLM | question='%s' | context_docs=%d", question, len(documents))
             llm_response = agent.generate(prompt)
+            logger.info("LLM response received | question='%s' | response_length=%d", question, len(llm_response))
             save_query_and_response(query=question, response=llm_response)
+            logger.info("Query and response cached in Redis | question='%s'", question)
             return llm_response
 
     return QueryService()

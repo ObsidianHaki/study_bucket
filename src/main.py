@@ -1,6 +1,13 @@
+import logging
 from pathlib import Path
 
 from fastapi import FastAPI
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s | %(levelname)-7s | %(name)s | %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S",
+)
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
@@ -18,6 +25,7 @@ app.add_middleware(
 
 app.include_router(documents_router)
 app.include_router(query_router)
+
 
 frontend_dir = Path(__file__).parent.parent / "frontend"
 app.mount("/static", StaticFiles(directory=frontend_dir), name="static")
