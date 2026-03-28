@@ -15,56 +15,67 @@
         }
 
         :root {
-            --bg-primary: #000000;
-            --bg-secondary: #0a0a0a;
-            --bg-tertiary: #111111;
-            --bg-card: #141414;
+            --bg-primary: #09090b;
+            --bg-secondary: #0c0c0f;
+            --bg-tertiary: #131316;
+            --bg-card: #18181b;
+            --bg-elevated: #1f1f23;
             --accent-primary: #7c3aed;
-            --accent-secondary: #a855f7;
-            --accent-glow: rgba(124, 58, 237, 0.3);
-            --text-primary: #e2e8f0;
-            --text-secondary: #94a3b8;
-            --text-muted: #64748b;
-            --border-color: #1e1e1e;
-            --success: #22c55e;
-            --error: #ef4444;
-            --user-bubble: #7c3aed;
-            --bot-bubble: #141414;
+            --accent-secondary: #a78bfa;
+            --accent-soft: rgba(124, 58, 237, 0.12);
+            --accent-glow: rgba(124, 58, 237, 0.25);
+            --text-primary: #fafafa;
+            --text-secondary: #a1a1aa;
+            --text-muted: #52525b;
+            --border-color: rgba(255, 255, 255, 0.06);
+            --border-hover: rgba(255, 255, 255, 0.1);
+            --success: #34d399;
+            --error: #f87171;
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 20px;
+            --radius-2xl: 24px;
         }
 
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             background: var(--bg-primary);
             color: var(--text-primary);
             height: 100vh;
             display: flex;
             flex-direction: column;
             overflow: hidden;
+            -webkit-font-smoothing: antialiased;
         }
 
         /* Header */
         .header {
-            background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary));
+            background: rgba(9, 9, 11, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--border-color);
-            padding: 16px 32px;
+            padding: 12px 28px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             flex-shrink: 0;
+            z-index: 10;
         }
 
         .header-left {
             display: flex;
             align-items: center;
-            gap: 14px;
+            gap: 12px;
         }
 
         .logo {
-            width: 42px;
-            height: 42px;
-            border-radius: 12px;
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
             overflow: hidden;
-            box-shadow: 0 4px 15px var(--accent-glow);
+            box-shadow: 0 0 20px var(--accent-glow);
+            flex-shrink: 0;
         }
 
         .logo img {
@@ -74,33 +85,39 @@
         }
 
         .header-title h1 {
-            font-size: 22px;
+            font-size: 18px;
             font-weight: 700;
-            background: linear-gradient(135deg, var(--accent-secondary), #c084fc);
+            background: linear-gradient(135deg, #e2e8f0, var(--accent-secondary));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            letter-spacing: -0.5px;
+            letter-spacing: -0.3px;
         }
 
         .header-title p {
-            font-size: 12px;
+            font-size: 11px;
             color: var(--text-muted);
             margin-top: 1px;
+            letter-spacing: 0.2px;
         }
 
         .header-status {
             display: flex;
             align-items: center;
-            gap: 8px;
-            font-size: 13px;
-            color: var(--text-secondary);
+            gap: 6px;
+            font-size: 12px;
+            color: var(--text-muted);
+            background: var(--bg-card);
+            padding: 6px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
         }
 
         .status-dot {
-            width: 8px;
-            height: 8px;
+            width: 6px;
+            height: 6px;
             border-radius: 50%;
             background: var(--success);
+            box-shadow: 0 0 8px rgba(52, 211, 153, 0.5);
             animation: pulse 2s infinite;
         }
 
@@ -118,7 +135,7 @@
 
         /* Sidebar */
         .sidebar {
-            width: 320px;
+            width: 300px;
             background: var(--bg-secondary);
             border-right: 1px solid var(--border-color);
             display: flex;
@@ -127,55 +144,75 @@
         }
 
         .sidebar-header {
-            padding: 20px;
+            padding: 20px 20px 16px;
             border-bottom: 1px solid var(--border-color);
         }
 
         .sidebar-header h2 {
-            font-size: 15px;
+            font-size: 13px;
             font-weight: 600;
             color: var(--text-primary);
-            margin-bottom: 4px;
+            letter-spacing: 0.3px;
         }
 
         .sidebar-header p {
-            font-size: 12px;
+            font-size: 11px;
             color: var(--text-muted);
+            margin-top: 4px;
         }
 
         /* Upload area */
         .upload-area {
-            margin: 20px;
-            border: 2px dashed var(--border-color);
-            border-radius: 16px;
-            padding: 32px 20px;
+            margin: 16px;
+            border: 1.5px dashed rgba(124, 58, 237, 0.25);
+            border-radius: var(--radius-lg);
+            padding: 32px 16px;
             text-align: center;
             cursor: pointer;
-            transition: all 0.3s ease;
-            background: rgba(124, 58, 237, 0.03);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: linear-gradient(135deg, rgba(124, 58, 237, 0.04), rgba(168, 85, 247, 0.02));
+            position: relative;
+            overflow: hidden;
+        }
+
+        .upload-area::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at center, var(--accent-soft), transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .upload-area:hover::before,
+        .upload-area.dragover::before {
+            opacity: 1;
         }
 
         .upload-area:hover,
         .upload-area.dragover {
             border-color: var(--accent-primary);
-            background: rgba(124, 58, 237, 0.08);
-            box-shadow: 0 0 30px rgba(124, 58, 237, 0.1);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 32px rgba(124, 58, 237, 0.15);
         }
 
         .upload-icon {
-            width: 56px;
-            height: 56px;
-            margin: 0 auto 14px;
-            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-            border-radius: 16px;
+            width: 48px;
+            height: 48px;
+            margin: 0 auto 12px;
+            background: linear-gradient(135deg, var(--accent-primary), #8b5cf6);
+            border-radius: var(--radius-md);
             display: flex;
             align-items: center;
             justify-content: center;
+            position: relative;
+            z-index: 1;
+            box-shadow: 0 4px 16px rgba(124, 58, 237, 0.3);
         }
 
         .upload-icon svg {
-            width: 28px;
-            height: 28px;
+            width: 22px;
+            height: 22px;
             stroke: white;
             fill: none;
             stroke-width: 2;
@@ -184,14 +221,31 @@
         }
 
         .upload-area h3 {
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
+            position: relative;
+            z-index: 1;
         }
 
         .upload-area p {
-            font-size: 12px;
+            font-size: 11px;
             color: var(--text-muted);
+            position: relative;
+            z-index: 1;
+        }
+
+        .upload-area .upload-hint {
+            display: inline-block;
+            margin-top: 10px;
+            font-size: 10px;
+            color: var(--text-muted);
+            background: var(--bg-card);
+            padding: 4px 10px;
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            position: relative;
+            z-index: 1;
         }
 
         .upload-area input {
@@ -202,40 +256,46 @@
         .file-list {
             flex: 1;
             overflow-y: auto;
-            padding: 0 20px 20px;
+            padding: 0 16px 16px;
         }
 
         .file-list-title {
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 1.2px;
             color: var(--text-muted);
-            margin-bottom: 12px;
+            margin-bottom: 10px;
+            padding-left: 2px;
         }
 
         .file-item {
             display: flex;
             align-items: center;
-            gap: 12px;
-            padding: 12px 14px;
+            gap: 10px;
+            padding: 10px 12px;
             background: var(--bg-card);
-            border-radius: 12px;
-            margin-bottom: 8px;
+            border-radius: var(--radius-md);
+            margin-bottom: 6px;
             border: 1px solid var(--border-color);
-            animation: slideIn 0.3s ease;
+            animation: slideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: border-color 0.2s ease;
+        }
+
+        .file-item:hover {
+            border-color: var(--border-hover);
         }
 
         @keyframes slideIn {
-            from { opacity: 0; transform: translateY(-8px); }
+            from { opacity: 0; transform: translateY(-6px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
         .file-icon {
-            width: 36px;
-            height: 36px;
-            border-radius: 10px;
-            background: rgba(239, 68, 68, 0.15);
+            width: 32px;
+            height: 32px;
+            border-radius: var(--radius-sm);
+            background: rgba(248, 113, 113, 0.1);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -243,9 +303,9 @@
         }
 
         .file-icon svg {
-            width: 18px;
-            height: 18px;
-            stroke: #ef4444;
+            width: 16px;
+            height: 16px;
+            stroke: #f87171;
             fill: none;
             stroke-width: 2;
         }
@@ -256,7 +316,7 @@
         }
 
         .file-name {
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 500;
             white-space: nowrap;
             overflow: hidden;
@@ -264,7 +324,7 @@
         }
 
         .file-status {
-            font-size: 11px;
+            font-size: 10px;
             color: var(--text-muted);
             margin-top: 2px;
         }
@@ -285,7 +345,7 @@
         .messages-container {
             flex: 1;
             overflow-y: auto;
-            padding: 24px 32px;
+            padding: 24px 40px;
             scroll-behavior: smooth;
         }
 
@@ -296,15 +356,16 @@
             justify-content: center;
             height: 100%;
             text-align: center;
-            gap: 16px;
+            gap: 12px;
         }
 
         .welcome-logo {
-            width: 80px;
-            height: 80px;
-            border-radius: 24px;
+            width: 72px;
+            height: 72px;
+            border-radius: var(--radius-xl);
             overflow: hidden;
-            box-shadow: 0 8px 40px var(--accent-glow);
+            box-shadow: 0 0 50px var(--accent-glow);
+            margin-bottom: 4px;
         }
 
         .welcome-logo img {
@@ -316,41 +377,73 @@
         .welcome-screen h2 {
             font-size: 28px;
             font-weight: 700;
-            background: linear-gradient(135deg, var(--text-primary), var(--accent-secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: var(--text-primary);
+            letter-spacing: -0.5px;
         }
 
         .welcome-screen p {
-            font-size: 15px;
-            color: var(--text-muted);
-            max-width: 420px;
-            line-height: 1.6;
+            font-size: 14px;
+            color: var(--text-secondary);
+            max-width: 380px;
+            line-height: 1.7;
         }
 
-        .welcome-hints {
+        .welcome-steps {
             display: flex;
-            gap: 10px;
-            margin-top: 12px;
-            flex-wrap: wrap;
-            justify-content: center;
+            gap: 24px;
+            margin-top: 20px;
         }
 
-        .hint-chip {
-            padding: 10px 18px;
+        .welcome-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            padding: 20px 24px;
             background: var(--bg-card);
             border: 1px solid var(--border-color);
-            border-radius: 12px;
-            font-size: 13px;
-            color: var(--text-secondary);
-            cursor: pointer;
+            border-radius: var(--radius-lg);
+            max-width: 160px;
             transition: all 0.2s ease;
         }
 
-        .hint-chip:hover {
-            border-color: var(--accent-primary);
-            color: var(--accent-secondary);
-            background: rgba(124, 58, 237, 0.08);
+        .welcome-step:hover {
+            border-color: var(--border-hover);
+            transform: translateY(-2px);
+        }
+
+        .welcome-step-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .welcome-step-icon.upload-step {
+            background: rgba(124, 58, 237, 0.12);
+        }
+
+        .welcome-step-icon.ask-step {
+            background: rgba(52, 211, 153, 0.12);
+        }
+
+        .welcome-step-icon.learn-step {
+            background: rgba(251, 191, 36, 0.12);
+        }
+
+        .welcome-step span {
+            font-size: 12px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .welcome-step small {
+            font-size: 10px;
+            color: var(--text-muted);
+            line-height: 1.4;
         }
 
         /* Message bubbles */
@@ -358,12 +451,12 @@
             display: flex;
             gap: 12px;
             margin-bottom: 20px;
-            max-width: 85%;
-            animation: fadeIn 0.3s ease;
+            max-width: 80%;
+            animation: fadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(6px); }
+            from { opacity: 0; transform: translateY(4px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
@@ -373,20 +466,20 @@
         }
 
         .message-avatar {
-            width: 34px;
-            height: 34px;
-            border-radius: 10px;
+            width: 30px;
+            height: 30px;
+            border-radius: var(--radius-sm);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 14px;
+            font-size: 12px;
             font-weight: 600;
             flex-shrink: 0;
             margin-top: 2px;
         }
 
         .message.bot .message-avatar {
-            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            background: linear-gradient(135deg, var(--accent-primary), #8b5cf6);
             overflow: hidden;
         }
 
@@ -397,15 +490,16 @@
         }
 
         .message.user .message-avatar {
-            background: var(--bg-tertiary);
+            background: var(--bg-elevated);
             color: var(--text-secondary);
+            border: 1px solid var(--border-color);
         }
 
         .message-content {
-            padding: 14px 18px;
-            border-radius: 16px;
-            font-size: 14px;
-            line-height: 1.65;
+            padding: 12px 16px;
+            border-radius: var(--radius-lg);
+            font-size: 13.5px;
+            line-height: 1.7;
         }
 
         .message.bot .message-content {
@@ -415,71 +509,72 @@
         }
 
         .message.user .message-content {
-            background: linear-gradient(135deg, var(--accent-primary), #6d28d9);
+            background: var(--accent-primary);
             color: white;
             border-top-right-radius: 4px;
+            box-shadow: 0 4px 16px rgba(124, 58, 237, 0.25);
         }
 
         /* Markdown styles in bot messages */
         .message.bot .message-content h1,
         .message.bot .message-content h2,
         .message.bot .message-content h3 {
-            margin: 16px 0 8px;
+            margin: 14px 0 6px;
             font-weight: 600;
         }
 
-        .message.bot .message-content h1 { font-size: 20px; }
-        .message.bot .message-content h2 { font-size: 17px; }
-        .message.bot .message-content h3 { font-size: 15px; }
+        .message.bot .message-content h1 { font-size: 18px; }
+        .message.bot .message-content h2 { font-size: 16px; }
+        .message.bot .message-content h3 { font-size: 14px; }
 
         .message.bot .message-content p {
-            margin: 8px 0;
+            margin: 6px 0;
         }
 
         .message.bot .message-content ul,
         .message.bot .message-content ol {
-            margin: 8px 0;
-            padding-left: 22px;
+            margin: 6px 0;
+            padding-left: 20px;
         }
 
         .message.bot .message-content li {
-            margin: 4px 0;
+            margin: 3px 0;
         }
 
         .message.bot .message-content code {
-            background: rgba(124, 58, 237, 0.15);
-            padding: 2px 7px;
+            background: rgba(124, 58, 237, 0.12);
+            padding: 2px 6px;
             border-radius: 5px;
             font-family: 'JetBrains Mono', 'Fira Code', monospace;
-            font-size: 13px;
+            font-size: 12.5px;
         }
 
         .message.bot .message-content pre {
             background: var(--bg-primary);
             border: 1px solid var(--border-color);
-            border-radius: 10px;
-            padding: 14px 18px;
-            margin: 12px 0;
+            border-radius: var(--radius-md);
+            padding: 14px 16px;
+            margin: 10px 0;
             overflow-x: auto;
         }
 
         .message.bot .message-content pre code {
             background: none;
             padding: 0;
-            font-size: 13px;
+            font-size: 12.5px;
             line-height: 1.5;
         }
 
         .message.bot .message-content blockquote {
             border-left: 3px solid var(--accent-primary);
-            padding-left: 14px;
-            margin: 10px 0;
+            padding-left: 12px;
+            margin: 8px 0;
             color: var(--text-secondary);
         }
 
         .message.bot .message-content table {
             border-collapse: collapse;
-            margin: 12px 0;
+            margin: 10px 0;
             width: 100%;
         }
 
@@ -488,7 +583,7 @@
             border: 1px solid var(--border-color);
             padding: 8px 12px;
             text-align: left;
-            font-size: 13px;
+            font-size: 12.5px;
         }
 
         .message.bot .message-content th {
@@ -515,13 +610,13 @@
 
         .thinking-dots {
             display: flex;
-            gap: 6px;
+            gap: 5px;
             align-items: center;
         }
 
         .thinking-dots span {
-            width: 8px;
-            height: 8px;
+            width: 7px;
+            height: 7px;
             border-radius: 50%;
             background: var(--accent-secondary);
             animation: thinkingPulse 1.8s ease-in-out infinite;
@@ -531,15 +626,15 @@
         .thinking-dots span:nth-child(3) { animation-delay: 0.6s; }
 
         @keyframes thinkingPulse {
-            0%, 100% { opacity: 0.2; transform: scale(0.8); }
-            50% { opacity: 1; transform: scale(1.2); }
+            0%, 100% { opacity: 0.15; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.1); }
         }
 
         .thinking-status {
-            font-size: 12px;
+            font-size: 11px;
             color: var(--text-muted);
             animation: fadeInOut 2s ease-in-out infinite;
-            min-height: 18px;
+            min-height: 16px;
         }
 
         @keyframes fadeInOut {
@@ -547,18 +642,17 @@
             50% { opacity: 1; }
         }
 
-        /* Shimmer skeleton lines while thinking */
         .thinking-skeleton {
             display: flex;
             flex-direction: column;
-            gap: 8px;
-            margin-top: 4px;
+            gap: 7px;
+            margin-top: 2px;
         }
 
         .skeleton-line {
-            height: 12px;
-            border-radius: 6px;
-            background: linear-gradient(90deg, var(--bg-tertiary) 25%, rgba(124, 58, 237, 0.1) 50%, var(--bg-tertiary) 75%);
+            height: 10px;
+            border-radius: 5px;
+            background: linear-gradient(90deg, var(--bg-tertiary) 25%, rgba(124, 58, 237, 0.08) 50%, var(--bg-tertiary) 75%);
             background-size: 200% 100%;
             animation: shimmer 1.5s ease-in-out infinite;
         }
@@ -572,7 +666,6 @@
             100% { background-position: -200% 0; }
         }
 
-        /* Typewriter cursor for streaming effect */
         .typewriter-cursor::after {
             content: '\2588';
             color: var(--accent-secondary);
@@ -585,10 +678,33 @@
             50% { opacity: 0; }
         }
 
-        /* Input area thinking state */
+        /* Input area */
+        .input-area {
+            padding: 12px 40px 20px;
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border-color);
+        }
+
+        .input-wrapper {
+            display: flex;
+            align-items: flex-end;
+            gap: 10px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-xl);
+            padding: 4px 4px 4px 18px;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .input-wrapper:focus-within {
+            border-color: rgba(124, 58, 237, 0.4);
+            box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.08);
+        }
+
         .input-wrapper.thinking {
             border-color: var(--accent-primary);
-            box-shadow: 0 0 20px rgba(124, 58, 237, 0.15);
+            box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
         }
 
         .input-wrapper.thinking::before {
@@ -598,55 +714,14 @@
             left: 0;
             height: 2px;
             width: 100%;
+            border-radius: 0 0 var(--radius-xl) var(--radius-xl);
             background: linear-gradient(90deg, transparent, var(--accent-secondary), transparent);
             animation: inputProgress 2s ease-in-out infinite;
-        }
-
-        .input-wrapper {
-            position: relative;
-        }
-
-        /* Send button thinking animation */
-        .send-btn.thinking {
-            animation: sendPulse 1.5s ease-in-out infinite;
-            pointer-events: none;
-        }
-
-        .send-btn.thinking svg {
-            animation: spin 1.2s linear infinite;
-        }
-
-        @keyframes sendPulse {
-            0%, 100% { box-shadow: 0 0 0 0 rgba(124, 58, 237, 0.4); }
-            50% { box-shadow: 0 0 0 10px rgba(124, 58, 237, 0); }
         }
 
         @keyframes inputProgress {
             0% { transform: translateX(-100%); }
             100% { transform: translateX(100%); }
-        }
-
-        /* Input area */
-        .input-area {
-            padding: 16px 32px 24px;
-            border-top: 1px solid var(--border-color);
-            background: var(--bg-secondary);
-        }
-
-        .input-wrapper {
-            display: flex;
-            align-items: flex-end;
-            gap: 12px;
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 6px 6px 6px 18px;
-            transition: border-color 0.2s ease;
-        }
-
-        .input-wrapper:focus-within {
-            border-color: var(--accent-primary);
-            box-shadow: 0 0 20px rgba(124, 58, 237, 0.1);
         }
 
         .input-wrapper textarea {
@@ -655,8 +730,8 @@
             border: none;
             outline: none;
             color: var(--text-primary);
-            font-family: 'Inter', sans-serif;
-            font-size: 14px;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 13.5px;
             line-height: 1.5;
             resize: none;
             max-height: 120px;
@@ -668,10 +743,10 @@
         }
 
         .send-btn {
-            width: 42px;
-            height: 42px;
-            border-radius: 12px;
-            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            width: 38px;
+            height: 38px;
+            border-radius: var(--radius-md);
+            background: linear-gradient(135deg, var(--accent-primary), #8b5cf6);
             border: none;
             cursor: pointer;
             display: flex;
@@ -683,26 +758,52 @@
 
         .send-btn:hover {
             transform: scale(1.05);
-            box-shadow: 0 4px 15px var(--accent-glow);
+            box-shadow: 0 4px 16px rgba(124, 58, 237, 0.35);
         }
 
         .send-btn:disabled {
-            opacity: 0.5;
+            opacity: 0.4;
             cursor: not-allowed;
             transform: none;
+            box-shadow: none;
         }
 
         .send-btn svg {
-            width: 20px;
-            height: 20px;
+            width: 18px;
+            height: 18px;
             stroke: white;
             fill: none;
             stroke-width: 2;
         }
 
+        .send-btn.thinking {
+            animation: sendPulse 1.5s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        .send-btn.thinking svg {
+            animation: spin 1.2s linear infinite;
+        }
+
+        @keyframes sendPulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(124, 58, 237, 0.4); }
+            50% { box-shadow: 0 0 0 8px rgba(124, 58, 237, 0); }
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .input-hint {
+            text-align: center;
+            margin-top: 8px;
+            font-size: 10px;
+            color: var(--text-muted);
+        }
+
         /* Scrollbar */
         ::-webkit-scrollbar {
-            width: 6px;
+            width: 5px;
         }
 
         ::-webkit-scrollbar-track {
@@ -710,12 +811,12 @@
         }
 
         ::-webkit-scrollbar-thumb {
-            background: var(--border-color);
+            background: rgba(255, 255, 255, 0.08);
             border-radius: 3px;
         }
 
         ::-webkit-scrollbar-thumb:hover {
-            background: var(--text-muted);
+            background: rgba(255, 255, 255, 0.15);
         }
 
         /* Toast notification */
@@ -723,37 +824,35 @@
             position: fixed;
             bottom: 24px;
             right: 24px;
-            padding: 14px 20px;
-            border-radius: 12px;
-            font-size: 13px;
+            padding: 12px 18px;
+            border-radius: var(--radius-md);
+            font-size: 12px;
             font-weight: 500;
             color: white;
             z-index: 1000;
             animation: toastIn 0.3s ease, toastOut 0.3s ease 2.7s forwards;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(10px);
         }
 
-        .toast.success { background: var(--success); }
-        .toast.error { background: var(--error); }
+        .toast.success { background: rgba(52, 211, 153, 0.9); }
+        .toast.error { background: rgba(248, 113, 113, 0.9); }
 
         @keyframes toastIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+            from { opacity: 0; transform: translateY(16px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
         }
         @keyframes toastOut {
             from { opacity: 1; }
-            to { opacity: 0; }
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
+            to { opacity: 0; transform: translateY(-8px); }
         }
 
         /* Responsive */
         @media (max-width: 768px) {
-            .sidebar { width: 260px; }
-            .messages-container { padding: 16px; }
-            .input-area { padding: 12px 16px 16px; }
+            .sidebar { width: 240px; }
+            .messages-container { padding: 16px 20px; }
+            .input-area { padding: 10px 20px 16px; }
+            .welcome-steps { flex-direction: column; gap: 12px; }
         }
     </style>
 </head>
@@ -765,7 +864,7 @@
             <div class="logo"><img src="/static/Luni_logo.png" alt="luni logo"></div>
             <div class="header-title">
                 <h1>luni</h1>
-                <p>Your intelligent study companion</p>
+                <p>AI Study Companion</p>
             </div>
         </div>
         <div class="header-status">
@@ -782,7 +881,6 @@
             <div class="sidebar-header">
                 <h2>Knowledge Base</h2>
                 <p>Upload PDFs to teach luni</p>
-                <p style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">Single files or entire folders</p>
             </div>
 
             <div class="upload-area" id="uploadArea">
@@ -791,16 +889,8 @@
                 </div>
                 <h3>Upload PDF</h3>
                 <p>Drag & drop or click to browse</p>
+                <span class="upload-hint">Single PDF files only</span>
                 <input type="file" id="fileInput" accept=".pdf">
-            </div>
-
-            <div class="upload-area" id="uploadFolderArea">
-                <div class="upload-icon">
-                    <svg viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
-                </div>
-                <h3>Upload Folder</h3>
-                <p>Select a folder with PDFs</p>
-                <input type="file" id="folderInput" webkitdirectory directory multiple>
             </div>
 
             <div class="file-list" id="fileList">
@@ -813,12 +903,30 @@
             <div class="messages-container" id="messagesContainer">
                 <div class="welcome-screen" id="welcomeScreen">
                     <div class="welcome-logo"><img src="/static/Luni_logo.png" alt="luni logo"></div>
-                    <h2>Welcome to luni</h2>
-                    <p>Upload your study materials and ask me anything. I can render markdown and code blocks for you.</p>
-                    <div class="welcome-hints">
-                        <div class="hint-chip" onclick="setQuestion('Summarize the uploaded document')">Summarize document</div>
-                        <div class="hint-chip" onclick="setQuestion('What are the key concepts?')">Key concepts</div>
-                        <div class="hint-chip" onclick="setQuestion('Explain the key topics in detail')">Explain topics</div>
+                    <h2>Hello, I am luni</h2>
+                    <p>Upload a PDF and ask me anything about it. I'll help you understand your study materials.</p>
+                    <div class="welcome-steps">
+                        <div class="welcome-step">
+                            <div class="welcome-step-icon upload-step">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                            </div>
+                            <span>Upload</span>
+                            <small>Add a PDF document</small>
+                        </div>
+                        <div class="welcome-step">
+                            <div class="welcome-step-icon ask-step">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                            </div>
+                            <span>Ask</span>
+                            <small>Ask any question</small>
+                        </div>
+                        <div class="welcome-step">
+                            <div class="welcome-step-icon learn-step">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                            </div>
+                            <span>Learn</span>
+                            <small>Get clear answers</small>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -830,6 +938,7 @@
                         <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
                     </button>
                 </div>
+                <div class="input-hint">Press Enter to send, Shift+Enter for new line</div>
             </div>
         </main>
     </div>
@@ -842,6 +951,7 @@
         const uploadArea = document.getElementById('uploadArea');
         const fileInput = document.getElementById('fileInput');
         const fileList = document.getElementById('fileList');
+        let fileIdCounter = 0;
 
         uploadArea.addEventListener('click', () => fileInput.click());
         uploadArea.addEventListener('dragover', e => {
@@ -852,6 +962,22 @@
         uploadArea.addEventListener('drop', e => {
             e.preventDefault();
             uploadArea.classList.remove('dragover');
+            // Only accept single PDF files, reject folders and multiple files
+            if (e.dataTransfer.items) {
+                const items = [...e.dataTransfer.items];
+                if (items.length > 1) {
+                    showToast('Please upload a single PDF file', 'error');
+                    return;
+                }
+                const item = items[0];
+                if (item.webkitGetAsEntry) {
+                    const entry = item.webkitGetAsEntry();
+                    if (entry && entry.isDirectory) {
+                        showToast('Folders are not supported. Please upload a single PDF file.', 'error');
+                        return;
+                    }
+                }
+            }
             const file = e.dataTransfer.files[0];
             if (file && file.type === 'application/pdf') uploadFile(file);
             else showToast('Please upload a PDF file', 'error');
@@ -860,24 +986,8 @@
             if (fileInput.files[0]) uploadFile(fileInput.files[0]);
         });
 
-        // --- Folder Upload ---
-        const uploadFolderArea = document.getElementById('uploadFolderArea');
-        const folderInput = document.getElementById('folderInput');
-
-        uploadFolderArea.addEventListener('click', () => folderInput.click());
-        folderInput.addEventListener('change', () => {
-            const files = Array.from(folderInput.files).filter(f => f.name.endsWith('.pdf'));
-            if (files.length === 0) {
-                showToast('No PDF files found in folder', 'error');
-                return;
-            }
-            showToast(`Uploading ${files.length} PDF(s)...`, 'success');
-            files.forEach(f => uploadFile(f));
-            folderInput.value = '';
-        });
-
         async function uploadFile(file) {
-            const itemId = 'file-' + Date.now();
+            const itemId = 'file-' + (++fileIdCounter);
             addFileItem(itemId, file.name, 'Uploading...', 'uploading');
 
             const formData = new FormData();
@@ -929,11 +1039,6 @@
             questionInput.style.height = 'auto';
             questionInput.style.height = Math.min(questionInput.scrollHeight, 120) + 'px';
         });
-
-        function setQuestion(q) {
-            questionInput.value = q;
-            questionInput.focus();
-        }
 
         function handleKeyDown(e) {
             if (e.key === 'Enter' && !e.shiftKey) {
@@ -1085,7 +1190,6 @@
             messagesContainer.appendChild(msg);
 
             const rendered = renderContent(text);
-            // Type out the HTML in chunks for a streaming feel
             const tempDiv = document.createElement('div');
             tempDiv.innerHTML = rendered;
             const fullText = tempDiv.textContent || '';
@@ -1096,7 +1200,6 @@
 
             function typeChunk() {
                 if (charIdx >= fullText.length) {
-                    // Done typing — show full rendered markdown
                     content.classList.remove('typewriter-cursor');
                     content.innerHTML = rendered;
                     messagesContainer.scrollTop = messagesContainer.scrollHeight;
