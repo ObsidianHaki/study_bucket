@@ -4,6 +4,12 @@ services:
     build: .
     ports:
       - "8000:8000"
+    volumes:
+      - chroma_docker:/chroma
   redis:
     env_file: ".env"
+    ports:
+      - "6379:6379"
     image: redis:alpine
+volumes:
+  chroma_docker:

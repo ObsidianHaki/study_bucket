@@ -1,7 +1,10 @@
+import logging
 from typing import BinaryIO
 
 from pypdf import PdfReader
 from .text_chunker import splitter
+
+logger = logging.getLogger(__name__)
 
 
 def get_pdf_metadata(binary_stream: BinaryIO,page_number: int) -> dict:
@@ -18,25 +21,27 @@ def get_pdf_metadata(binary_stream: BinaryIO,page_number: int) -> dict:
         # "Total Pages": len(reader.pages)
     }
 
-def parse_pdf(binary_stream: BinaryIO) -> list[str]:
+def parse_pdf(binary_stream: BinaryIO) -> list[dict]:
     reader = PdfReader(binary_stream)
-    
+    meta = reader.metadata
+    base_metadata = {
+        "Title": meta.title,
+        "Author": meta.author,
+    }
+    logger.info("Parsing PDF | title='%s' | author='%s' | pages=%d", meta.title, meta.author, len(reader.pages))
+
     complete_chunks = []
-    page_counter=1
-    for page in reader.pages:
+    for page_number, page in enumerate(reader.pages, start=1):
         text = page.extract_text()
-        chunks = []
-        if text:
-            chunks.extend(
-                splitter.split_text(text)
-            )  # create chunks for one complete page, extend splits those elements in a simple list
+        if not text:
+            logger.warning("Page %d has no extractable text, skipping", page_number)
+            continue
+        chunks = splitter.split_text(text)
         for chunk in chunks:
             complete_chunks.append(
-                {"chunked_text": chunk, 
-                "metadata": get_pdf_metadata(binary_stream,page_counter)
-                }
+                {"chunked_text": chunk,
+                 "metadata": {**base_metadata, "Page": page_number}}
             )
-        page_counter+=1
-        
 
+    logger.info("PDF parsing complete | total_chunks=%d", len(complete_chunks))
     return complete_chunks
