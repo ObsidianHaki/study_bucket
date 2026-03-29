@@ -50,12 +50,12 @@ def get_query_service(
             {context}
 
             ### Question:
-            {question}
+            {question} #TODO: store the question in a mongo DB collection
 
 
             """
             logger.info("Prompt sent to LLM | question='%s' | context_docs=%d", question, len(documents))
-            llm_response = agent.generate(prompt)
+            llm_response = agent.generate(prompt) # store the response in a mongo db Collection
             logger.info("LLM response received | question='%s' | response_length=%d", question, len(llm_response))
             save_query_and_response(query=question, response=llm_response)
             logger.info("Query and response cached in Redis | question='%s'", question)

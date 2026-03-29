@@ -10,14 +10,6 @@ from ..db.vector_db.chroma_client import get_collection
 logger = logging.getLogger(__name__)
 
 
-def store_documents(documents: list[str], collection: Collection):
-    logger.info("Storing %d text document(s) to ChromaDB", len(documents))
-    for document in documents:
-        collection.add(
-            ids=[hashlib.sha256(document.encode()).hexdigest()], documents=[document]
-        )
-    logger.info("Successfully stored %d text document(s)", len(documents))
-
 
 def store_pdf(file: UploadFile, collection: Collection):
     logger.info("PDF upload received | filename='%s' | content_type='%s'", file.filename, file.content_type)
@@ -37,9 +29,6 @@ def store_pdf(file: UploadFile, collection: Collection):
 def get_document_service(collection: Collection = Depends(get_collection)):
 
     class DocumentService:
-        def store_documents(self, documents: list[str]):
-            store_documents(documents, collection)
-
         def store_pdf(self, file: UploadFile):
             store_pdf(file, collection)
 
