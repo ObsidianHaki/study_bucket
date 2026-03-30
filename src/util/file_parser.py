@@ -25,8 +25,9 @@ def parse_pdf(binary_stream: BinaryIO) -> list[dict]:
     reader = PdfReader(binary_stream)
     meta = reader.metadata
     base_metadata = {
-        "Title": meta.title,
-        "Author": meta.author,
+        "Title": str(meta.title) if meta.title else "No Title",
+        "Author": str(meta.author) if meta.author else "No Author",
+
     }
     logger.info("Parsing PDF | title='%s' | author='%s' | pages=%d", meta.title, meta.author, len(reader.pages))
 
