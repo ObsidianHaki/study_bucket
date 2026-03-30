@@ -847,9 +847,222 @@
             to { opacity: 0; transform: translateY(-8px); }
         }
 
+        /* Chat history sidebar (right) */
+        .chat-sidebar {
+            width: 280px;
+            background: var(--bg-secondary);
+            border-left: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+            transition: width 0.3s ease, opacity 0.3s ease;
+            overflow: hidden;
+        }
+
+        .chat-sidebar.hidden {
+            width: 0;
+            border-left: none;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .toggle-sidebar-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            color: var(--text-secondary);
+            font-size: 12px;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .toggle-sidebar-btn:hover {
+            border-color: var(--border-hover);
+            color: var(--text-primary);
+        }
+
+        .toggle-sidebar-btn svg {
+            width: 14px;
+            height: 14px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+        }
+
+        .chat-sidebar-header {
+            padding: 20px 16px 16px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .chat-sidebar-header h2 {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+            letter-spacing: 0.3px;
+        }
+
+        .new-chat-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            background: linear-gradient(135deg, var(--accent-primary), #8b5cf6);
+            border: none;
+            border-radius: var(--radius-sm);
+            color: white;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: inherit;
+        }
+
+        .new-chat-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 16px rgba(124, 58, 237, 0.35);
+        }
+
+        .new-chat-btn svg {
+            width: 14px;
+            height: 14px;
+            stroke: white;
+            fill: none;
+            stroke-width: 2;
+        }
+
+        .sessions-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 8px;
+        }
+
+        .session-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-bottom: 4px;
+            border: 1px solid transparent;
+        }
+
+        .session-item:hover {
+            background: var(--bg-card);
+            border-color: var(--border-color);
+        }
+
+        .session-item.active {
+            background: var(--accent-soft);
+            border-color: rgba(124, 58, 237, 0.3);
+        }
+
+        .session-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: var(--radius-sm);
+            background: var(--bg-elevated);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .session-icon svg {
+            width: 14px;
+            height: 14px;
+            stroke: var(--accent-secondary);
+            fill: none;
+            stroke-width: 2;
+        }
+
+        .session-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .session-title {
+            font-size: 12px;
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: var(--text-primary);
+        }
+
+        .session-date {
+            font-size: 10px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .session-delete {
+            width: 24px;
+            height: 24px;
+            border-radius: 6px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: all 0.2s ease;
+        }
+
+        .session-item:hover .session-delete {
+            opacity: 1;
+        }
+
+        .session-delete:hover {
+            background: rgba(248, 113, 113, 0.15);
+        }
+
+        .session-delete svg {
+            width: 13px;
+            height: 13px;
+            stroke: var(--error);
+            fill: none;
+            stroke-width: 2;
+        }
+
+        .sessions-empty {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            text-align: center;
+            color: var(--text-muted);
+            gap: 8px;
+        }
+
+        .sessions-empty svg {
+            width: 32px;
+            height: 32px;
+            stroke: var(--text-muted);
+            fill: none;
+            stroke-width: 1.5;
+            opacity: 0.5;
+        }
+
+        .sessions-empty p {
+            font-size: 11px;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .sidebar { width: 240px; }
+            .chat-sidebar { width: 220px; }
             .messages-container { padding: 16px 20px; }
             .input-area { padding: 10px 20px 16px; }
             .welcome-steps { flex-direction: column; gap: 12px; }
@@ -867,9 +1080,15 @@
                 <p>AI Study Companion</p>
             </div>
         </div>
-        <div class="header-status">
-            <div class="status-dot"></div>
-            Online
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <button class="toggle-sidebar-btn" onclick="toggleChatSidebar()">
+                <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                <span id="toggleLabel">History</span>
+            </button>
+            <div class="header-status">
+                <div class="status-dot"></div>
+                Online
+            </div>
         </div>
     </header>
 
@@ -941,11 +1160,31 @@
                 <div class="input-hint">Press Enter to send, Shift+Enter for new line</div>
             </div>
         </main>
+
+        <!-- Chat History Sidebar -->
+        <aside class="chat-sidebar">
+            <div class="chat-sidebar-header">
+                <h2>Chat History</h2>
+                <button class="new-chat-btn" onclick="startNewChat()">
+                    <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    New Chat
+                </button>
+            </div>
+            <div class="sessions-list" id="sessionsList">
+                <div class="sessions-empty" id="sessionsEmpty">
+                    <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                    <p>No conversations yet.<br>Start chatting to create one.</p>
+                </div>
+            </div>
+        </aside>
     </div>
 
 
     <script>
         const API_BASE = window.location.origin;
+
+        // --- Session State ---
+        let currentSessionId = null;
 
         // --- Upload ---
         const uploadArea = document.getElementById('uploadArea');
@@ -1104,14 +1343,23 @@
             startThinkingStatus(thinkingEl);
 
             try {
-                const res = await fetch(`${API_BASE}/query?question=${encodeURIComponent(question)}`, {
-                    method: 'POST',
-                });
+                let url = `${API_BASE}/query?question=${encodeURIComponent(question)}`;
+                if (currentSessionId) {
+                    url += `&session_id=${encodeURIComponent(currentSessionId)}`;
+                }
+                const res = await fetch(url, { method: 'POST' });
                 if (!res.ok) throw new Error(`Error (${res.status})`);
                 const data = await res.json();
                 stopThinkingStatus();
                 thinkingEl.remove();
-                appendMessageWithTypewriter(data, 'bot');
+
+                // Track session
+                if (data.session_id) {
+                    currentSessionId = data.session_id;
+                    loadSessions(); // refresh sidebar
+                }
+
+                appendMessageWithTypewriter(data.response, 'bot');
             } catch (err) {
                 stopThinkingStatus();
                 thinkingEl.remove();
@@ -1217,6 +1465,138 @@
         function renderContent(text) {
             return marked.parse(text);
         }
+
+        // --- Sessions ---
+        const sessionsList = document.getElementById('sessionsList');
+        const sessionsEmpty = document.getElementById('sessionsEmpty');
+
+        async function loadSessions() {
+            try {
+                const res = await fetch(`${API_BASE}/sessions`);
+                if (!res.ok) return;
+                const data = await res.json();
+                renderSessions(data);
+            } catch (err) {
+                console.error('Failed to load sessions:', err);
+            }
+        }
+
+        function renderSessions(sessions) {
+            // Keep only the empty state element, remove old session items
+            sessionsList.querySelectorAll('.session-item').forEach(el => el.remove());
+
+            if (sessions.length === 0) {
+                sessionsEmpty.style.display = 'flex';
+                return;
+            }
+            sessionsEmpty.style.display = 'none';
+
+            sessions.forEach(s => {
+                const div = document.createElement('div');
+                div.className = 'session-item' + (s._id === currentSessionId ? ' active' : '');
+                div.innerHTML = `
+                    <div class="session-icon">
+                        <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                    </div>
+                    <div class="session-info">
+                        <div class="session-title">${escapeHtml(s.title)}</div>
+                        <div class="session-date">${formatDate(s.updated_at)}</div>
+                    </div>
+                    <button class="session-delete" onclick="event.stopPropagation(); deleteSession('${s._id}')">
+                        <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-2 14H7L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+                    </button>`;
+                div.addEventListener('click', () => openSession(s._id));
+                sessionsList.appendChild(div);
+            });
+        }
+
+        async function openSession(sessionId) {
+            try {
+                const res = await fetch(`${API_BASE}/sessions/${sessionId}`);
+                if (!res.ok) return;
+                const session = await res.json();
+
+                currentSessionId = sessionId;
+
+                // Clear chat and hide welcome
+                clearChat();
+                if (welcomeScreen) welcomeScreen.style.display = 'none';
+
+                // Render all messages
+                if (session.messages) {
+                    session.messages.forEach(msg => {
+                        const role = msg.role === 'user' ? 'user' : 'bot';
+                        appendMessage(msg.content, role);
+                    });
+                }
+
+                // Update active state in sidebar
+                sessionsList.querySelectorAll('.session-item').forEach(el => el.classList.remove('active'));
+                const items = sessionsList.querySelectorAll('.session-item');
+                items.forEach(el => {
+                    if (el.querySelector('.session-title')?.textContent === session.title) {
+                        el.classList.add('active');
+                    }
+                });
+                loadSessions();
+            } catch (err) {
+                showToast('Failed to load chat', 'error');
+            }
+        }
+
+        async function deleteSession(sessionId) {
+            try {
+                await fetch(`${API_BASE}/sessions/${sessionId}`, { method: 'DELETE' });
+                if (currentSessionId === sessionId) {
+                    startNewChat();
+                }
+                loadSessions();
+            } catch (err) {
+                showToast('Failed to delete chat', 'error');
+            }
+        }
+
+        function startNewChat() {
+            currentSessionId = null;
+            clearChat();
+            if (welcomeScreen) welcomeScreen.style.display = 'flex';
+            loadSessions();
+            questionInput.focus();
+        }
+
+        function clearChat() {
+            // Remove all messages but keep the welcome screen element
+            messagesContainer.querySelectorAll('.message').forEach(el => el.remove());
+        }
+
+        function formatDate(dateStr) {
+            if (!dateStr) return '';
+            const d = new Date(dateStr);
+            const now = new Date();
+            const diffMs = now - d;
+            const diffMins = Math.floor(diffMs / 60000);
+            if (diffMins < 1) return 'Just now';
+            if (diffMins < 60) return `${diffMins}m ago`;
+            const diffHours = Math.floor(diffMins / 60);
+            if (diffHours < 24) return `${diffHours}h ago`;
+            const diffDays = Math.floor(diffHours / 24);
+            if (diffDays < 7) return `${diffDays}d ago`;
+            return d.toLocaleDateString();
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function toggleChatSidebar() {
+            const sidebar = document.querySelector('.chat-sidebar');
+            sidebar.classList.toggle('hidden');
+        }
+
+        // Load sessions on page load
+        loadSessions();
 
         // --- Toast ---
         function showToast(msg, type) {
