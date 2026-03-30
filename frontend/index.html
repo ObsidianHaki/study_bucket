@@ -847,12 +847,163 @@
             to { opacity: 0; transform: translateY(-8px); }
         }
 
+        /* Mobile menu toggle */
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 6px;
+            border-radius: var(--radius-sm);
+            transition: background 0.2s ease;
+        }
+
+        .menu-toggle:hover {
+            background: var(--bg-elevated);
+        }
+
+        .menu-toggle svg {
+            width: 22px;
+            height: 22px;
+            stroke: var(--text-secondary);
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 19;
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
-            .sidebar { width: 240px; }
-            .messages-container { padding: 16px 20px; }
-            .input-area { padding: 10px 20px 16px; }
-            .welcome-steps { flex-direction: column; gap: 12px; }
+            .menu-toggle {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                bottom: 0;
+                width: 280px;
+                z-index: 20;
+                transform: translateX(-100%);
+                transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .sidebar-overlay.open {
+                display: block;
+            }
+
+            .header {
+                padding: 10px 16px;
+            }
+
+            .header-title h1 {
+                font-size: 16px;
+            }
+
+            .header-title p {
+                display: none;
+            }
+
+            .messages-container {
+                padding: 16px 14px;
+            }
+
+            .input-area {
+                padding: 8px 12px 14px;
+            }
+
+            .input-wrapper {
+                padding: 3px 3px 3px 14px;
+            }
+
+            .message {
+                max-width: 90%;
+                gap: 8px;
+            }
+
+            .message-avatar {
+                width: 26px;
+                height: 26px;
+                font-size: 11px;
+            }
+
+            .message-content {
+                padding: 10px 14px;
+                font-size: 13px;
+            }
+
+            .welcome-screen h2 {
+                font-size: 22px;
+            }
+
+            .welcome-screen p {
+                font-size: 13px;
+                max-width: 300px;
+            }
+
+            .welcome-steps {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .welcome-step {
+                flex-direction: row;
+                max-width: 100%;
+                padding: 14px 18px;
+                gap: 12px;
+            }
+
+            .welcome-step small {
+                display: none;
+            }
+
+            .welcome-logo {
+                width: 56px;
+                height: 56px;
+            }
+
+            .input-hint {
+                display: none;
+            }
+
+            .toast {
+                left: 16px;
+                right: 16px;
+                bottom: 16px;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .header-status {
+                font-size: 0;
+                padding: 6px 8px;
+                gap: 0;
+            }
+
+            .header-status .status-dot {
+                margin: 0;
+            }
+
+            .message {
+                max-width: 95%;
+            }
         }
     </style>
 </head>
@@ -861,6 +1012,9 @@
     <!-- Header -->
     <header class="header">
         <div class="header-left">
+            <button class="menu-toggle" id="menuToggle" aria-label="Open sidebar">
+                <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+            </button>
             <div class="logo"><img src="/static/Luni_logo.png" alt="luni logo"></div>
             <div class="header-title">
                 <h1>luni</h1>
@@ -876,8 +1030,11 @@
     <!-- Main -->
     <div class="main-container">
 
+        <!-- Sidebar overlay for mobile -->
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
         <!-- Sidebar -->
-        <aside class="sidebar">
+        <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
                 <h2>Knowledge Base</h2>
                 <p>Upload PDFs to teach luni</p>
@@ -946,6 +1103,21 @@
 
     <script>
         const API_BASE = window.location.origin;
+
+        // --- Mobile sidebar toggle ---
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('open');
+            sidebarOverlay.classList.toggle('open');
+        });
+
+        sidebarOverlay.addEventListener('click', () => {
+            sidebar.classList.remove('open');
+            sidebarOverlay.classList.remove('open');
+        });
 
         // --- Upload ---
         const uploadArea = document.getElementById('uploadArea');
