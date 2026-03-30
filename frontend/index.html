@@ -12,6 +12,7 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
 
         :root {
@@ -43,6 +44,7 @@
             background: var(--bg-primary);
             color: var(--text-primary);
             height: 100vh;
+            height: 100dvh;
             display: flex;
             flex-direction: column;
             overflow: hidden;
@@ -1059,13 +1061,258 @@
             font-size: 11px;
         }
 
-        /* Responsive */
+        /* Mobile sidebar toggle button (Knowledge Base) */
+        .mobile-sidebar-toggle {
+            display: none;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            color: var(--text-secondary);
+            font-size: 12px;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .mobile-sidebar-toggle:hover {
+            border-color: var(--border-hover);
+            color: var(--text-primary);
+        }
+
+        .mobile-sidebar-toggle svg {
+            width: 14px;
+            height: 14px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+        }
+
+        /* Overlay backdrop for mobile sidebars */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            z-index: 49;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .sidebar-overlay.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* Tablet: ~769px - 1024px */
+        @media (max-width: 1024px) {
+            .sidebar { width: 260px; }
+            .chat-sidebar { width: 240px; }
+            .messages-container { padding: 20px 24px; }
+            .input-area { padding: 10px 24px 16px; }
+            .message { max-width: 88%; }
+        }
+
+        /* Mobile: <= 768px */
         @media (max-width: 768px) {
-            .sidebar { width: 240px; }
-            .chat-sidebar { width: 220px; }
-            .messages-container { padding: 16px 20px; }
-            .input-area { padding: 10px 20px 16px; }
-            .welcome-steps { flex-direction: column; gap: 12px; }
+            .mobile-sidebar-toggle {
+                display: flex;
+            }
+
+            .sidebar-overlay {
+                display: block;
+            }
+
+            /* Left sidebar becomes overlay drawer */
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                bottom: 0;
+                width: 300px;
+                max-width: 85vw;
+                z-index: 50;
+                transform: translateX(-100%);
+                transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                box-shadow: none;
+            }
+
+            .sidebar.mobile-open {
+                transform: translateX(0);
+                box-shadow: 8px 0 32px rgba(0, 0, 0, 0.4);
+            }
+
+            /* Right chat sidebar becomes overlay drawer */
+            .chat-sidebar {
+                position: fixed;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                width: 280px;
+                max-width: 85vw;
+                z-index: 50;
+                transform: translateX(100%);
+                transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                box-shadow: none;
+                opacity: 1;
+            }
+
+            .chat-sidebar.hidden {
+                width: 280px;
+                max-width: 85vw;
+                opacity: 1;
+                border-left: 1px solid var(--border-color);
+                pointer-events: auto;
+                transform: translateX(100%);
+            }
+
+            .chat-sidebar.mobile-open {
+                transform: translateX(0);
+                box-shadow: -8px 0 32px rgba(0, 0, 0, 0.4);
+            }
+
+            /* Chat area takes full width */
+            .chat-area {
+                width: 100%;
+            }
+
+            .header {
+                padding: 10px 16px;
+            }
+
+            .header-title h1 {
+                font-size: 16px;
+            }
+
+            .header-title p {
+                font-size: 10px;
+            }
+
+            .messages-container {
+                padding: 16px;
+            }
+
+            .input-area {
+                padding: 10px 12px 16px;
+            }
+
+            .input-wrapper {
+                padding: 3px 3px 3px 14px;
+            }
+
+            .input-hint {
+                display: none;
+            }
+
+            .message {
+                max-width: 92%;
+                gap: 8px;
+            }
+
+            .message-avatar {
+                width: 26px;
+                height: 26px;
+            }
+
+            .message-content {
+                padding: 10px 14px;
+                font-size: 13px;
+            }
+
+            .welcome-screen h2 {
+                font-size: 22px;
+            }
+
+            .welcome-screen p {
+                font-size: 13px;
+                max-width: 300px;
+            }
+
+            .welcome-steps {
+                flex-direction: column;
+                gap: 10px;
+                width: 100%;
+                padding: 0 16px;
+            }
+
+            .welcome-step {
+                flex-direction: row;
+                max-width: 100%;
+                padding: 14px 18px;
+                gap: 12px;
+            }
+
+            .welcome-step small {
+                display: none;
+            }
+
+            .welcome-logo {
+                width: 56px;
+                height: 56px;
+            }
+
+            /* Toast repositioned for mobile */
+            .toast {
+                left: 16px;
+                right: 16px;
+                bottom: 80px;
+                text-align: center;
+            }
+        }
+
+        /* Prevent iOS zoom on input focus - font-size must be >= 16px */
+        @media (max-width: 768px) {
+            .input-wrapper textarea {
+                font-size: 16px;
+            }
+        }
+
+        /* Small phones: <= 380px */
+        @media (max-width: 380px) {
+            .header {
+                padding: 8px 12px;
+            }
+
+            .logo {
+                width: 30px;
+                height: 30px;
+            }
+
+            .header-title h1 {
+                font-size: 15px;
+            }
+
+            .header-status {
+                padding: 4px 8px;
+                font-size: 11px;
+            }
+
+            .toggle-sidebar-btn span,
+            .mobile-sidebar-toggle span {
+                display: none;
+            }
+
+            .messages-container {
+                padding: 12px;
+            }
+
+            .message-content {
+                font-size: 12.5px;
+                padding: 8px 12px;
+            }
+
+            .welcome-screen h2 {
+                font-size: 20px;
+            }
+
+            .welcome-screen p {
+                font-size: 12px;
+            }
         }
     </style>
 </head>
@@ -1080,7 +1327,11 @@
                 <p>AI Study Companion</p>
             </div>
         </div>
-        <div style="display: flex; align-items: center; gap: 10px;">
+        <div style="display: flex; align-items: center; gap: 8px;">
+            <button class="mobile-sidebar-toggle" onclick="toggleMobileSidebar()">
+                <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                <span>Files</span>
+            </button>
             <button class="toggle-sidebar-btn" onclick="toggleChatSidebar()">
                 <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
                 <span id="toggleLabel">History</span>
@@ -1091,6 +1342,9 @@
             </div>
         </div>
     </header>
+
+    <!-- Overlay for mobile sidebars -->
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeAllMobileSidebars()"></div>
 
     <!-- Main -->
     <div class="main-container">
@@ -1590,10 +1844,48 @@
             return div.innerHTML;
         }
 
+        function isMobile() {
+            return window.innerWidth <= 768;
+        }
+
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+
         function toggleChatSidebar() {
             const sidebar = document.querySelector('.chat-sidebar');
-            sidebar.classList.toggle('hidden');
+            if (isMobile()) {
+                const isOpen = sidebar.classList.contains('mobile-open');
+                closeAllMobileSidebars();
+                if (!isOpen) {
+                    sidebar.classList.add('mobile-open');
+                    sidebarOverlay.classList.add('visible');
+                }
+            } else {
+                sidebar.classList.toggle('hidden');
+            }
         }
+
+        function toggleMobileSidebar() {
+            const sidebar = document.querySelector('.sidebar');
+            const isOpen = sidebar.classList.contains('mobile-open');
+            closeAllMobileSidebars();
+            if (!isOpen) {
+                sidebar.classList.add('mobile-open');
+                sidebarOverlay.classList.add('visible');
+            }
+        }
+
+        function closeAllMobileSidebars() {
+            document.querySelector('.sidebar').classList.remove('mobile-open');
+            document.querySelector('.chat-sidebar').classList.remove('mobile-open');
+            sidebarOverlay.classList.remove('visible');
+        }
+
+        // Close mobile sidebars on resize to desktop
+        window.addEventListener('resize', () => {
+            if (!isMobile()) {
+                closeAllMobileSidebars();
+            }
+        });
 
         // Load sessions on page load
         loadSessions();
