@@ -2178,24 +2178,19 @@
             msg.appendChild(content);
             messagesContainer.appendChild(msg);
 
-            const rendered = renderContent(text);
-            const tempDiv = document.createElement('div');
-            tempDiv.innerHTML = rendered;
-            const fullText = tempDiv.textContent || '';
-
             let charIdx = 0;
             const chunkSize = 3;
             const speed = 12;
 
             function typeChunk() {
-                if (charIdx >= fullText.length) {
+                if (charIdx >= text.length) {
                     content.classList.remove('typewriter-cursor');
-                    content.innerHTML = rendered;
+                    content.innerHTML = renderContent(text);
                     messagesContainer.scrollTop = messagesContainer.scrollHeight;
                     return;
                 }
-                charIdx = Math.min(charIdx + chunkSize, fullText.length);
-                content.textContent = fullText.substring(0, charIdx);
+                charIdx = Math.min(charIdx + chunkSize, text.length);
+                content.innerHTML = renderContent(text.substring(0, charIdx));
                 messagesContainer.scrollTop = messagesContainer.scrollHeight;
                 requestAnimationFrame(() => setTimeout(typeChunk, speed));
             }

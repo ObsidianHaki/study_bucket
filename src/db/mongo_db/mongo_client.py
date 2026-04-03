@@ -16,4 +16,10 @@ def get_client_db():
         db.create_collection(REGISTRY_COLLECTION)
     if CHAT_SESSIONS_COLLECTION not in db.list_collection_names():
         db.create_collection(CHAT_SESSIONS_COLLECTION)
+    #MongoDB index creation for the collections
+    db[REGISTRY_COLLECTION].create_index("filename", unique=True)
+    db[CHAT_SESSIONS_COLLECTION].create_index([("updated_at", -1)])
+
     return db
+
+MONGO_CLIENT=get_client_db()

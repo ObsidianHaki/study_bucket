@@ -1,9 +1,9 @@
-from fastapi import APIRouter, Depends
-from ...services.query_service import get_query_service
+from fastapi import APIRouter
+from ...services.query_service import query
 
-query_router = APIRouter()
+query_router = APIRouter(tags=["query"])
 
 
-@query_router.post("/query")
-def send_query(question: str, session_id: str = None, service=Depends(get_query_service)):
-    return service.query(question, session_id)
+@query_router.post("/query",tags=["query"])
+async def send_query(question: str, session_id: str = None):
+    return await query(question, session_id)

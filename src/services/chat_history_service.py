@@ -1,9 +1,11 @@
+import logging
 from datetime import datetime, timezone
 from bson import ObjectId
-from ..db.mongo_db.mongo_client import get_client_db, CHAT_SESSIONS_COLLECTION
+from ..db.mongo_db.mongo_client import  CHAT_SESSIONS_COLLECTION,MONGO_CLIENT
 
-db = get_client_db()
-sessions = db.get_collection(CHAT_SESSIONS_COLLECTION)
+logger = logging.getLogger(__name__)
+
+sessions = MONGO_CLIENT.get_collection(CHAT_SESSIONS_COLLECTION)
 
 
 def create_session(first_message: str) -> str:
@@ -16,6 +18,7 @@ def create_session(first_message: str) -> str:
         "updated_at": datetime.now(timezone.utc),
     }
     result = sessions.insert_one(doc)
+    logger.info("Session created | session_id='%s'", result.inserted_id)
     return str(result.inserted_id)
 
 
@@ -41,6 +44,9 @@ def get_session(session_id: str) -> dict | None:
     doc = sessions.find_one({"_id": ObjectId(session_id)})
     if doc:
         doc["_id"] = str(doc["_id"])
+        logger.info("Session found | session_id='%s'", session_id)
+    else:
+        logger.warning("Session not found | session_id='%s'", session_id)
     return doc
 
 

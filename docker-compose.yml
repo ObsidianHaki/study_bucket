@@ -7,12 +7,7 @@ services:
     volumes:
       - chroma_docker:/chroma
     depends_on:
-      - redis
       - mongo
-  redis:
-    ports:
-      - "6379:6379"
-    image: redis:alpine
   mongo:
     ports:
       - "27017:27017"
@@ -20,5 +15,5 @@ services:
     volumes:
       - mongodb_docker:/data/db
 volumes:
-  chroma_docker:
+  chroma_docker:  
   mongodb_docker:
