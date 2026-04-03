@@ -1768,6 +1768,9 @@
     <!-- Header -->
     <header class="header">
         <div class="header-left">
+            <button class="menu-toggle" id="menuToggle" aria-label="Open sidebar">
+                <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+            </button>
             <div class="logo"><img src="/static/Luni_logo.png" alt="luni logo"></div>
             <div class="header-title">
                 <h1>luni</h1>
@@ -1800,8 +1803,11 @@
     <!-- Main -->
     <div class="main-container">
 
+        <!-- Sidebar overlay for mobile -->
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
         <!-- Sidebar -->
-        <aside class="sidebar">
+        <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
                 <h2>Knowledge Base</h2>
                 <p>Upload PDFs to teach luni</p>
