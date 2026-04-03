@@ -1272,6 +1272,453 @@
             }
         }
 
+        /* Library Modal */
+        .library-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 100;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            animation: fadeIn 0.2s ease;
+        }
+
+        .library-overlay.visible {
+            display: flex;
+        }
+
+        .library-modal {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-2xl);
+            width: 100%;
+            max-width: 720px;
+            max-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            animation: modalIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes modalIn {
+            from { opacity: 0; transform: scale(0.95) translateY(8px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .library-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border-color);
+            flex-shrink: 0;
+        }
+
+        .library-header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .library-header-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-md);
+            background: linear-gradient(135deg, rgba(248, 113, 113, 0.15), rgba(248, 113, 113, 0.05));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .library-header-icon svg {
+            width: 20px;
+            height: 20px;
+            stroke: #f87171;
+            fill: none;
+            stroke-width: 2;
+        }
+
+        .library-header h2 {
+            font-size: 16px;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+        }
+
+        .library-header p {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .library-close-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: var(--radius-sm);
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .library-close-btn:hover {
+            border-color: var(--border-hover);
+            background: var(--bg-elevated);
+        }
+
+        .library-close-btn svg {
+            width: 16px;
+            height: 16px;
+            stroke: var(--text-secondary);
+            fill: none;
+            stroke-width: 2;
+        }
+
+        .library-count {
+            padding: 12px 24px;
+            font-size: 11px;
+            color: var(--text-muted);
+            border-bottom: 1px solid var(--border-color);
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .library-count-badge {
+            background: var(--accent-soft);
+            color: var(--accent-secondary);
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 11px;
+        }
+
+        .library-search {
+            padding: 10px 24px;
+            border-bottom: 1px solid var(--border-color);
+            flex-shrink: 0;
+            display: none;
+        }
+
+        .library-search-input {
+            width: 100%;
+            padding: 8px 12px 8px 34px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 13px;
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.2s ease;
+        }
+
+        .library-search-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .library-search-input:focus {
+            border-color: var(--accent-secondary);
+        }
+
+        .library-search-wrapper {
+            position: relative;
+        }
+
+        .library-search-icon {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 16px;
+            height: 16px;
+            stroke: var(--text-muted);
+            fill: none;
+            stroke-width: 2;
+            pointer-events: none;
+        }
+
+        .library-alphabet {
+            padding: 10px 24px;
+            border-bottom: 1px solid var(--border-color);
+            flex-shrink: 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+
+        .library-alphabet-btn {
+            background: none;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-muted);
+            font-size: 11px;
+            font-weight: 600;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .library-alphabet-btn:hover {
+            border-color: var(--border-hover);
+            color: var(--text-primary);
+        }
+
+        .library-alphabet-btn.active {
+            background: var(--accent-secondary);
+            border-color: var(--accent-secondary);
+            color: #fff;
+        }
+
+        .library-alphabet-btn.disabled {
+            opacity: 0.3;
+            cursor: default;
+            pointer-events: none;
+        }
+
+        .library-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px 24px 24px;
+        }
+
+        .library-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 12px;
+        }
+
+        .library-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 20px 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.2s ease;
+            cursor: default;
+        }
+
+        .library-card:hover {
+            border-color: var(--border-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+        }
+
+        .library-card-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: var(--radius-md);
+            background: linear-gradient(135deg, rgba(248, 113, 113, 0.12), rgba(248, 113, 113, 0.04));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .library-card-icon svg {
+            width: 26px;
+            height: 26px;
+            stroke: #f87171;
+            fill: none;
+            stroke-width: 1.5;
+        }
+
+        .library-card-name {
+            font-size: 12px;
+            font-weight: 500;
+            text-align: center;
+            word-break: break-word;
+            line-height: 1.4;
+            color: var(--text-primary);
+        }
+
+        .library-card-badge {
+            font-size: 10px;
+            color: var(--success);
+            background: rgba(52, 211, 153, 0.1);
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-weight: 500;
+        }
+
+        .library-empty {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 48px 24px;
+            text-align: center;
+            gap: 12px;
+        }
+
+        .library-empty-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: var(--radius-xl);
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .library-empty-icon svg {
+            width: 28px;
+            height: 28px;
+            stroke: var(--text-muted);
+            fill: none;
+            stroke-width: 1.5;
+            opacity: 0.5;
+        }
+
+        .library-empty p {
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        .library-loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 48px;
+        }
+
+        .library-loading .thinking-dots {
+            display: flex;
+            gap: 5px;
+        }
+
+        .library-loading .thinking-dots span {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent-secondary);
+            animation: thinkingPulse 1.8s ease-in-out infinite;
+        }
+
+        .library-loading .thinking-dots span:nth-child(2) { animation-delay: 0.3s; }
+        .library-loading .thinking-dots span:nth-child(3) { animation-delay: 0.6s; }
+
+        .library-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            color: var(--text-secondary);
+            font-size: 12px;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .library-btn:hover {
+            border-color: var(--border-hover);
+            color: var(--text-primary);
+        }
+
+        .library-btn svg {
+            width: 14px;
+            height: 14px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+        }
+
+        @media (max-width: 768px) {
+            .library-overlay {
+                padding: 12px;
+            }
+
+            .library-modal {
+                max-height: 90vh;
+                border-radius: var(--radius-xl);
+            }
+
+            .library-header {
+                padding: 16px;
+            }
+
+            .library-body {
+                padding: 12px 16px 20px;
+            }
+
+            .library-grid {
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+                gap: 10px;
+            }
+
+            .library-card {
+                padding: 16px 12px;
+            }
+
+            .library-card-icon {
+                width: 44px;
+                height: 44px;
+            }
+
+            .library-card-icon svg {
+                width: 22px;
+                height: 22px;
+            }
+
+            .library-count {
+                padding: 10px 16px;
+            }
+
+            .library-search {
+                padding: 8px 16px;
+            }
+
+            .library-alphabet {
+                padding: 8px 16px;
+                gap: 3px;
+            }
+
+            .library-alphabet-btn {
+                width: 24px;
+                height: 24px;
+                font-size: 10px;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .library-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+            }
+
+            .library-card {
+                padding: 14px 10px;
+                gap: 8px;
+            }
+
+            .library-card-icon {
+                width: 38px;
+                height: 38px;
+            }
+
+            .library-card-name {
+                font-size: 11px;
+            }
+        }
+
         /* Small phones: <= 380px */
         @media (max-width: 380px) {
             .header {
@@ -1331,6 +1778,10 @@
             <button class="mobile-sidebar-toggle" onclick="toggleMobileSidebar()">
                 <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
                 <span>Files</span>
+            </button>
+            <button class="library-btn" onclick="openLibrary()">
+                <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                <span>Library</span>
             </button>
             <button class="toggle-sidebar-btn" onclick="toggleChatSidebar()">
                 <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
@@ -1434,6 +1885,42 @@
     </div>
 
 
+    <!-- Library Modal -->
+    <div class="library-overlay" id="libraryOverlay" onclick="handleLibraryOverlayClick(event)">
+        <div class="library-modal">
+            <div class="library-header">
+                <div class="library-header-left">
+                    <div class="library-header-icon">
+                        <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                    </div>
+                    <div>
+                        <h2>PDF Library</h2>
+                        <p>All your uploaded documents</p>
+                    </div>
+                </div>
+                <button class="library-close-btn" onclick="closeLibrary()">
+                    <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+            </div>
+            <div class="library-count" id="libraryCount" style="display: none;">
+                <span>Documents:</span>
+                <span class="library-count-badge" id="libraryCountBadge">0</span>
+            </div>
+            <div class="library-search" id="librarySearch">
+                <div class="library-search-wrapper">
+                    <svg class="library-search-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                    <input type="text" class="library-search-input" id="librarySearchInput" placeholder="Search by filename..." autocomplete="off">
+                </div>
+            </div>
+            <div class="library-alphabet" id="libraryAlphabet" style="display: none;"></div>
+            <div class="library-body" id="libraryBody">
+                <div class="library-loading" id="libraryLoading">
+                    <div class="thinking-dots"><span></span><span></span><span></span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         const API_BASE = window.location.origin;
 
@@ -1487,7 +1974,7 @@
             formData.append('file', file);
 
             try {
-                const res = await fetch(`${API_BASE}/uploadfile`, { method: 'POST', body: formData });
+                const res = await fetch(`${API_BASE}/documents/upload`, { method: 'POST', body: formData });
                 if (!res.ok) throw new Error(`Upload failed (${res.status})`);
                 updateFileStatus(itemId, 'Processed & indexed', 'success');
                 showToast(`${file.name} uploaded successfully`, 'success');
@@ -1889,6 +2376,199 @@
 
         // Load sessions on page load
         loadSessions();
+
+        // --- Library ---
+        const libraryOverlay = document.getElementById('libraryOverlay');
+        const libraryBody = document.getElementById('libraryBody');
+        const libraryCount = document.getElementById('libraryCount');
+        const libraryCountBadge = document.getElementById('libraryCountBadge');
+        const libraryLoading = document.getElementById('libraryLoading');
+
+        async function openLibrary() {
+            libraryOverlay.classList.add('visible');
+            document.body.style.overflow = 'hidden';
+            libraryLoading.style.display = 'flex';
+            libraryCount.style.display = 'none';
+
+            // Remove previous content
+            const oldGrid = libraryBody.querySelector('.library-grid, .library-empty');
+            if (oldGrid) oldGrid.remove();
+            document.getElementById('libraryAlphabet').style.display = 'none';
+            document.getElementById('librarySearch').style.display = 'none';
+            librarySearchInput.value = '';
+            searchQuery = '';
+
+            try {
+                const res = await fetch(`${API_BASE}/documents/all`);
+                if (!res.ok) throw new Error('Failed to load documents');
+                const files = await res.json();
+                libraryLoading.style.display = 'none';
+                renderLibrary(files);
+            } catch (err) {
+                libraryLoading.style.display = 'none';
+                renderLibraryEmpty();
+                showToast(err.message, 'error');
+            }
+        }
+
+        function closeLibrary() {
+            libraryOverlay.classList.remove('visible');
+            document.body.style.overflow = '';
+        }
+
+        function handleLibraryOverlayClick(e) {
+            if (e.target === libraryOverlay) closeLibrary();
+        }
+
+        // Close on Escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && libraryOverlay.classList.contains('visible')) {
+                closeLibrary();
+            }
+        });
+
+        let libraryFiles = [];
+        let activeFilter = null;
+        let searchQuery = '';
+
+        const librarySearchInput = document.getElementById('librarySearchInput');
+        librarySearchInput.addEventListener('input', (e) => {
+            searchQuery = e.target.value.trim().toLowerCase();
+            applyFilters();
+        });
+
+        function renderLibrary(files) {
+            if (!files || files.length === 0) {
+                document.getElementById('libraryAlphabet').style.display = 'none';
+                document.getElementById('librarySearch').style.display = 'none';
+                renderLibraryEmpty();
+                return;
+            }
+
+            libraryFiles = files.slice().sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
+            activeFilter = null;
+            searchQuery = '';
+            librarySearchInput.value = '';
+
+            libraryCount.style.display = 'flex';
+            libraryCountBadge.textContent = files.length;
+            document.getElementById('librarySearch').style.display = 'block';
+
+            renderAlphabetBar();
+            renderLibraryGrid(libraryFiles);
+        }
+
+        function renderAlphabetBar() {
+            const bar = document.getElementById('libraryAlphabet');
+            bar.innerHTML = '';
+            bar.style.display = 'flex';
+
+            const firstLetters = new Set(
+                libraryFiles.map(f => f.charAt(0).toUpperCase()).filter(c => /[A-Z]/.test(c))
+            );
+
+            // "All" button
+            const allBtn = document.createElement('button');
+            allBtn.className = 'library-alphabet-btn active';
+            allBtn.textContent = 'All';
+            allBtn.style.width = 'auto';
+            allBtn.style.padding = '0 10px';
+            allBtn.onclick = () => filterByLetter(null);
+            bar.appendChild(allBtn);
+
+            for (let i = 65; i <= 90; i++) {
+                const letter = String.fromCharCode(i);
+                const btn = document.createElement('button');
+                btn.className = 'library-alphabet-btn';
+                if (!firstLetters.has(letter)) btn.classList.add('disabled');
+                btn.textContent = letter;
+                btn.onclick = () => filterByLetter(letter);
+                bar.appendChild(btn);
+            }
+        }
+
+        function filterByLetter(letter) {
+            activeFilter = letter;
+
+            // Clear search when picking a letter
+            searchQuery = '';
+            librarySearchInput.value = '';
+
+            // Update active state on buttons
+            document.querySelectorAll('.library-alphabet-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (letter === null && btn.textContent === 'All') btn.classList.add('active');
+                if (btn.textContent === letter) btn.classList.add('active');
+            });
+
+            applyFilters();
+        }
+
+        function applyFilters() {
+            let filtered = libraryFiles;
+
+            // Apply alphabet filter
+            if (activeFilter) {
+                filtered = filtered.filter(f => f.charAt(0).toUpperCase() === activeFilter);
+            }
+
+            // Apply search query
+            if (searchQuery) {
+                filtered = filtered.filter(f => f.toLowerCase().includes(searchQuery));
+            }
+
+            libraryCountBadge.textContent = filtered.length;
+
+            // Remove old grid/empty
+            const old = libraryBody.querySelector('.library-grid, .library-empty');
+            if (old) old.remove();
+
+            if (filtered.length === 0) {
+                const empty = document.createElement('div');
+                empty.className = 'library-empty';
+                const reason = searchQuery
+                    ? `No documents matching "${escapeHtml(searchQuery)}"`
+                    : `No documents starting with "${activeFilter}"`;
+                empty.innerHTML = `<p>${reason}.</p>`;
+                libraryBody.appendChild(empty);
+            } else {
+                renderLibraryGrid(filtered);
+            }
+        }
+
+        function renderLibraryGrid(files) {
+            const old = libraryBody.querySelector('.library-grid');
+            if (old) old.remove();
+
+            const grid = document.createElement('div');
+            grid.className = 'library-grid';
+
+            files.forEach(filename => {
+                const card = document.createElement('div');
+                card.className = 'library-card';
+                card.innerHTML = `
+                    <div class="library-card-icon">
+                        <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                    </div>
+                    <div class="library-card-name">${escapeHtml(filename)}</div>
+                    <div class="library-card-badge">Indexed</div>`;
+                grid.appendChild(card);
+            });
+
+            libraryBody.appendChild(grid);
+        }
+
+        function renderLibraryEmpty() {
+            libraryCount.style.display = 'none';
+            const empty = document.createElement('div');
+            empty.className = 'library-empty';
+            empty.innerHTML = `
+                <div class="library-empty-icon">
+                    <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                </div>
+                <p>No documents uploaded yet.<br>Upload a PDF from the sidebar to get started.</p>`;
+            libraryBody.appendChild(empty);
+        }
 
         // --- Toast ---
         function showToast(msg, type) {

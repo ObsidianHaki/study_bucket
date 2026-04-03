@@ -6,17 +6,15 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-
 from ..db.vector_db.chroma_client import get_collection
-from ..ai.anthropic_agent import get_anthropic_agent
-from ..db.redis_db.redis_caching import save_query_and_response, cache_previous_messages
+from ..ai.anthropic_llm import get_anthropic_llm
+from ..db.redis_db.redis_client import save_query_and_response, cache_previous_messages
 from .chat_history_service import create_session, add_message
 
 
 def get_query_service(
-    collection: Collection = Depends(get_collection), agent=Depends(get_anthropic_agent)
+        collection: Collection = Depends(get_collection), agent=Depends(get_anthropic_llm)
 ):
-
     class QueryService:
         def query(self, question: str, session_id: str = None) -> dict:
             # If no session_id, create a new session
@@ -32,7 +30,7 @@ def get_query_service(
             # Step 2: Build a prompt with the retrieved context
 
             context = "\n\n".join(documents)
-            metadatas="\n\n".join(str(metadata) for metadata in results["metadatas"][0])
+            metadatas = "\n\n".join(str(metadata) for metadata in results["metadatas"][0])
 
             previous_message = cache_previous_messages()
 
@@ -63,10 +61,10 @@ def get_query_service(
 
             """
             logger.info("Prompt sent to LLM | question='%s' | context_docs=%d", question, len(documents))
-            llm_response = agent.generate(prompt)
+            llm_response = agent.get_llm_response(prompt)
             logger.info("LLM response received | question='%s' | response_length=%d", question, len(llm_response))
 
-            save_query_and_response(query=question, response=llm_response) # redis
+            save_query_and_response(query=question, response=llm_response)  # redis
 
             # Save assistant message to session
             add_message(session_id, "assistant", llm_response)

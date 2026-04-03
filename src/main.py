@@ -28,9 +28,9 @@ app.include_router(documents_router)
 app.include_router(query_router)
 app.include_router(chat_router)
 
-
 frontend_dir = Path(__file__).parent.parent / "frontend"
 app.mount("/static", StaticFiles(directory=frontend_dir), name="static")
+
 
 @app.get("/")
 def serve_frontend():

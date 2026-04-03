@@ -1,6 +1,6 @@
 from datetime import datetime, timezone
 from bson import ObjectId
-from ..db.mongo_db.client_mongo import get_client_db, CHAT_SESSIONS_COLLECTION
+from ..db.mongo_db.mongo_client import get_client_db, CHAT_SESSIONS_COLLECTION
 
 db = get_client_db()
 sessions = db.get_collection(CHAT_SESSIONS_COLLECTION)

@@ -19,7 +19,6 @@ services:
     image: mongo
     volumes:
       - mongodb_docker:/data/db
-
 volumes:
   chroma_docker:
   mongodb_docker:
