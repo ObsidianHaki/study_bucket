@@ -6,10 +6,14 @@ services:
       - "8000:8000"
     volumes:
       - chroma_docker:/chroma
-  redis:
-    env_file: ".env"
+    depends_on:
+      - mongo
+  mongo:
     ports:
-      - "6379:6379"
-    image: redis:alpine
+      - "27017:27017"
+    image: mongo
+    volumes:
+      - mongodb_docker:/data/db
 volumes:
-  chroma_docker:
+  chroma_docker:  
+  mongodb_docker:
