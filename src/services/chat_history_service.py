@@ -22,18 +22,19 @@ def create_session(first_message: str) -> str:
     return str(result.inserted_id)
 
 
-def add_message(session_id: str, role: str, content: str):
+def add_message(session_id: str, role: str, content: str, meta: dict | None = None):
     """Append a message to an existing session."""
+    message = {
+        "role": role,
+        "content": content,
+        "timestamp": datetime.now(timezone.utc),
+    }
+    if meta:
+        message["meta"] = meta
     sessions.update_one(
         {"_id": ObjectId(session_id)},
         {
-            "$push": {
-                "messages": {
-                    "role": role,
-                    "content": content,
-                    "timestamp": datetime.now(timezone.utc),
-                }
-            },
+            "$push": {"messages": message},
             "$set": {"updated_at": datetime.now(timezone.utc)},
         },
     )
