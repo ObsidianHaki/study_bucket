@@ -4,11 +4,14 @@ from pypdf import PdfReader
 from .text_chunker import splitter
 
 
-def parse_pdf(binary_stream: BinaryIO) -> list[dict]:
+def parse_pdf(binary_stream: BinaryIO, filename: str = None) -> list[dict]:
     reader = PdfReader(binary_stream)
     meta = reader.metadata
+    title = str(meta.title) if meta.title else None
+    if not title or title.strip() in ("", "No Title", "untitled"):
+        title = filename.rsplit(".", 1)[0] if filename else "Untitled"
     base_metadata = {
-        "Title": str(meta.title) if meta.title else "No Title",
+        "Title": title,
         "Author": str(meta.author) if meta.author else "No Author",
     }
 

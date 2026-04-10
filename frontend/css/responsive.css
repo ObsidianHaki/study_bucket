@@ -1,0 +1,311 @@
+/* Tablet: ~769px - 1024px */
+@media (max-width: 1024px) {
+    .sidebar:not(.collapsed) { width: 260px; }
+    .chat-sidebar:not(.collapsed) { width: 240px; }
+    .messages-container { padding: 20px 24px; }
+    .input-area { padding: 10px 24px 16px; }
+    .message { max-width: 88%; }
+}
+
+/* Mobile: <= 768px */
+@media (max-width: 768px) {
+    .sidebar-overlay {
+        display: block;
+    }
+
+    /* Left sidebar becomes overlay drawer */
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: 300px;
+        max-width: 85vw;
+        z-index: 50;
+        transform: translateX(-100%);
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: none;
+        border-right: 1px solid var(--border-color);
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    .sidebar.collapsed {
+        width: 300px;
+        max-width: 85vw;
+        border-right: 1px solid var(--border-color);
+        opacity: 1;
+        pointer-events: auto;
+        transform: translateX(-100%);
+    }
+
+    .sidebar.mobile-open {
+        transform: translateX(0);
+        box-shadow: 8px 0 32px rgba(0, 0, 0, 0.4);
+    }
+
+    /* Right chat sidebar becomes overlay drawer */
+    .chat-sidebar {
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        width: 280px;
+        max-width: 85vw;
+        z-index: 50;
+        transform: translateX(100%);
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: none;
+        border-left: 1px solid var(--border-color);
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    .chat-sidebar.collapsed {
+        width: 280px;
+        max-width: 85vw;
+        border-left: 1px solid var(--border-color);
+        opacity: 1;
+        pointer-events: auto;
+        transform: translateX(100%);
+    }
+
+    .chat-sidebar.mobile-open {
+        transform: translateX(0);
+        box-shadow: -8px 0 32px rgba(0, 0, 0, 0.4);
+    }
+
+    /* Chat area takes full width */
+    .chat-area {
+        width: 100%;
+    }
+
+    .header {
+        padding: 10px 16px;
+    }
+
+    .header-title h1 {
+        font-size: 16px;
+    }
+
+    .header-title p {
+        font-size: 10px;
+    }
+
+    .messages-container {
+        padding: 16px;
+    }
+
+    .input-area {
+        padding: 10px 12px 16px;
+    }
+
+    .input-wrapper {
+        padding: 3px 3px 3px 14px;
+    }
+
+    .input-hint {
+        display: none;
+    }
+
+    .message {
+        max-width: 92%;
+        gap: 8px;
+    }
+
+    .message-avatar {
+        width: 26px;
+        height: 26px;
+    }
+
+    .message-content {
+        padding: 10px 14px;
+        font-size: 13px;
+    }
+
+    .meta-panel {
+        margin-left: 0;
+        max-width: 100%;
+    }
+
+    .meta-summary {
+        flex-wrap: wrap;
+    }
+
+    .meta-stats {
+        gap: 8px;
+    }
+
+    .welcome-screen h2 {
+        font-size: 22px;
+    }
+
+    .welcome-screen p {
+        font-size: 13px;
+        max-width: 300px;
+    }
+
+    .welcome-steps {
+        flex-direction: column;
+        gap: 10px;
+        width: 100%;
+        padding: 0 16px;
+    }
+
+    .welcome-step {
+        flex-direction: row;
+        max-width: 100%;
+        padding: 14px 18px;
+        gap: 12px;
+    }
+
+    .welcome-step small {
+        display: none;
+    }
+
+    .welcome-logo {
+        width: 56px;
+        height: 56px;
+    }
+
+    /* Toast repositioned for mobile */
+    .toast {
+        left: 16px;
+        right: 16px;
+        bottom: 80px;
+        text-align: center;
+    }
+
+    /* Hide text labels on mobile header buttons */
+    .header-btn span {
+        display: none;
+    }
+
+    .header-btn {
+        padding: 7px 10px;
+    }
+}
+
+/* Prevent iOS zoom on input focus */
+@media (max-width: 768px) {
+    .input-wrapper textarea {
+        font-size: 16px;
+    }
+}
+
+/* Library mobile */
+@media (max-width: 768px) {
+    .library-overlay {
+        padding: 12px;
+    }
+
+    .library-modal {
+        max-height: 90vh;
+        border-radius: var(--radius-xl);
+    }
+
+    .library-header {
+        padding: 16px;
+    }
+
+    .library-body {
+        padding: 12px 16px 20px;
+    }
+
+    .library-grid {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 10px;
+    }
+
+    .library-card {
+        padding: 16px 12px;
+    }
+
+    .library-card-icon {
+        width: 44px;
+        height: 44px;
+    }
+
+    .library-card-icon svg {
+        width: 22px;
+        height: 22px;
+    }
+
+    .library-count {
+        padding: 10px 16px;
+    }
+
+    .library-search {
+        padding: 8px 16px;
+    }
+
+    .library-alphabet {
+        padding: 8px 16px;
+        gap: 3px;
+    }
+
+    .library-alphabet-btn {
+        width: 24px;
+        height: 24px;
+        font-size: 10px;
+    }
+}
+
+@media (max-width: 380px) {
+    .library-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+    }
+
+    .library-card {
+        padding: 14px 10px;
+        gap: 8px;
+    }
+
+    .library-card-icon {
+        width: 38px;
+        height: 38px;
+    }
+
+    .library-card-name {
+        font-size: 11px;
+    }
+}
+
+/* Small phones: <= 380px */
+@media (max-width: 380px) {
+    .header {
+        padding: 8px 12px;
+    }
+
+    .logo {
+        width: 30px;
+        height: 30px;
+    }
+
+    .header-title h1 {
+        font-size: 15px;
+    }
+
+    .header-status {
+        padding: 4px 8px;
+        font-size: 11px;
+    }
+
+    .messages-container {
+        padding: 12px;
+    }
+
+    .message-content {
+        font-size: 12.5px;
+        padding: 8px 12px;
+    }
+
+    .welcome-screen h2 {
+        font-size: 20px;
+    }
+
+    .welcome-screen p {
+        font-size: 12px;
+    }
+}
