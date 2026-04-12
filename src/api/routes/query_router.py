@@ -23,7 +23,7 @@ async def _event_stream(session_id: str, token_gen: AsyncGenerator[str | dict, N
 
 
 @query_router.post("/query", tags=["query"])
-async def send_query(question: str, session_id: str = None):
+async def send_query(question: str, session_id: str = None)->StreamingResponse:
     result = await query(question, session_id)
     return StreamingResponse(
         _event_stream(result["session_id"], result["stream"]),

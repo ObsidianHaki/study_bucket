@@ -65,7 +65,9 @@ async def query(question: str, session_id: str = None) -> dict:
     metadatas = "\n\n".join(str(metadata) for metadata in raw_metadatas)
 
     session = get_session(session_id)
-    previous_message = session["messages"][-6:] if session and session.get("messages") else []
+    previous_message = (
+        session["messages"][-6:] if session and session.get("messages") else []
+    )
 
     user_prompt = f"""### Chat History:
 {previous_message}
