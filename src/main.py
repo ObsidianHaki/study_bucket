@@ -15,6 +15,7 @@ from fastapi.responses import FileResponse
 from .api.routes.documents_router import documents_router
 from .api.routes.query_router import query_router
 from .api.routes.chat_router import chat_router
+from .api.routes.group_router import group_router
 
 app = FastAPI()
 
@@ -28,6 +29,7 @@ app.add_middleware(
 app.include_router(documents_router)
 app.include_router(query_router)
 app.include_router(chat_router)
+app.include_router(group_router)
 
 frontend_dir = Path(__file__).parent.parent / "frontend"
 app.mount("/static", StaticFiles(directory=frontend_dir), name="static")
