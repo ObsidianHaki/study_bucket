@@ -99,6 +99,15 @@ async function fetchSession(sessionId) {
     return res.json();
 }
 
+async function renameSessionById(sessionId, title) {
+    const res = await fetch(`${API_BASE}/sessions/${sessionId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title }),
+    });
+    if (!res.ok) throw new Error('Failed to rename session');
+}
+
 async function deleteSessionById(sessionId) {
     await fetch(`${API_BASE}/sessions/${sessionId}`, { method: 'DELETE' });
 }
@@ -114,4 +123,43 @@ function downloadDocument(filename) {
     a.href = `${API_BASE}/documents/download/${encodeURIComponent(filename)}`;
     a.download = filename;
     a.click();
+}
+
+// --- Groups API ---
+async function fetchGroups() {
+    const res = await fetch(`${API_BASE}/groups/`);
+    if (!res.ok) throw new Error('Failed to load groups');
+    return res.json();
+}
+
+async function createGroup(name) {
+    const res = await fetch(`${API_BASE}/groups?group_name=${encodeURIComponent(name)}`, { method: 'POST' });
+    if (res.status === 409) throw new Error('Group already exists');
+    if (!res.ok) throw new Error('Failed to create group');
+    return res.json();
+}
+
+async function deleteGroupById(id) {
+    const res = await fetch(`${API_BASE}/groups/${encodeURIComponent(id)}`, { method: 'DELETE' });
+    if (!res.ok) throw new Error('Failed to delete group');
+}
+
+async function renameGroup(oldName, newName) {
+    const res = await fetch(`${API_BASE}/groups`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ old_name: oldName, new_name: newName }),
+    });
+    if (res.status === 409) throw new Error('Group name already exists');
+    if (!res.ok) throw new Error('Failed to rename group');
+}
+
+async function addChatToGroup(groupName, chatId) {
+    const res = await fetch(`${API_BASE}/groups/${encodeURIComponent(groupName)}/chats/${encodeURIComponent(chatId)}`, { method: 'POST' });
+    if (!res.ok) throw new Error('Failed to add chat to group');
+}
+
+async function removeChatFromGroup(groupName, chatId) {
+    const res = await fetch(`${API_BASE}/groups/${encodeURIComponent(groupName)}/chats/${encodeURIComponent(chatId)}`, { method: 'DELETE' });
+    if (!res.ok) throw new Error('Failed to remove chat from group');
 }

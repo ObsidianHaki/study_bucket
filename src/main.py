@@ -22,8 +22,8 @@ app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
-    allow_methods=["POST","GET"],
-  
+    allow_methods=["GET", "POST", "PATCH", "DELETE"],
+    allow_headers=["*"],
 )
 
 app.include_router(documents_router)
