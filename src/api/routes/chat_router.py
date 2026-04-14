@@ -1,7 +1,12 @@
-from fastapi import APIRouter
-from ...services.chat_history_service import get_all_sessions, get_session, delete_session
+from fastapi import APIRouter, HTTPException
+from pydantic import BaseModel
+from ...services.chat_history_service import get_all_sessions, get_session, delete_session, rename_session
 
 chat_router = APIRouter(prefix="/sessions", tags=["sessions"])
+
+
+class RenameSession(BaseModel):
+    title: str
 
 
 @chat_router.get("")
@@ -13,8 +18,15 @@ def list_sessions():
 def get_chat_session(session_id: str):
     session = get_session(session_id)
     if session is None:
-        return {"error": "Session not found"}
+        raise HTTPException(status_code=404, detail="Session not found")
     return session
+
+
+@chat_router.patch("/{session_id}")
+def rename_chat_session(session_id: str, body: RenameSession):
+    if not rename_session(session_id, body.title):
+        raise HTTPException(status_code=404, detail="Session not found")
+    return {"status": "updated"}
 
 
 @chat_router.delete("/{session_id}")

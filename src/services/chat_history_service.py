@@ -64,6 +64,15 @@ def get_all_sessions() -> list[dict]:
     return result
 
 
+def rename_session(session_id: str, new_title: str) -> bool:
+    """Rename a chat session. Returns True if updated."""
+    result = sessions.update_one(
+        {"_id": ObjectId(session_id)},
+        {"$set": {"title": new_title}},
+    )
+    return result.modified_count > 0
+
+
 def delete_session(session_id: str):
     """Delete a chat session."""
     sessions.delete_one({"_id": ObjectId(session_id)})

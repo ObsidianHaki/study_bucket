@@ -1,5 +1,5 @@
 services:
-  study_bucket:
+  luni:
     env_file: ".env"
     build: .
     ports:
