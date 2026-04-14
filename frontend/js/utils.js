@@ -288,10 +288,13 @@ function renderContent(text) {
 
     // Post-process: replace mermaid code blocks with render containers
     html = html.replace(
-        /<pre><code class="language-mermaid">([\s\S]*?)<\/code><\/pre>/g,
+        /<pre><code class="language-mermaid">([\s\S]*?)<\/code>\s*<\/pre>/g,
         (_, code) => {
             const id = `mermaid-${++mermaidIdCounter}`;
-            const decoded = code.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&').replace(/&#39;/g, "'").replace(/&quot;/g, '"');
+            // Use a temporary element to reliably decode all HTML entities
+            const tmp = document.createElement('textarea');
+            tmp.innerHTML = code;
+            const decoded = tmp.value;
 
             // Detect diagram type for a better label
             const firstLine = decoded.trim().split('\n')[0].toLowerCase();
@@ -337,9 +340,12 @@ function renderContent(text) {
 
     // Post-process: replace html code blocks with sandboxed iframe previews
     html = html.replace(
-        /<pre><code class="language-html">([\s\S]*?)<\/code><\/pre>/g,
+        /<pre><code class="language-html">([\s\S]*?)<\/code>\s*<\/pre>/g,
         (_, code) => {
-            const decoded = code.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&').replace(/&#39;/g, "'").replace(/&quot;/g, '"');
+            // Use a temporary element to reliably decode all HTML entities
+            const tmp = document.createElement('textarea');
+            tmp.innerHTML = code;
+            const decoded = tmp.value;
             const encodedSrc = encodeURIComponent(decoded);
             return `<div class="viz-container viz-interactive">
                 <div class="viz-header">
@@ -667,34 +673,25 @@ function toggleVizCode(btn) {
     }
 }
 
-/** Render all pending mermaid blocks in a container element (parallel for speed) */
+/** Render all pending mermaid blocks in a container element (sequentially to avoid id conflicts) */
 async function renderMermaidBlocks(container) {
     const blocks = container.querySelectorAll('.mermaid-block:not([data-processed])');
-    const promises = [...blocks].map(async (block) => {
+    for (const block of blocks) {
         block.setAttribute('data-processed', 'true');
         const source = block.textContent.trim();
         // Store original source for re-rendering on theme switch
         block.setAttribute('data-source', source);
 
-        // Validate syntax first — mermaid.parse throws on bad syntax
-        try {
-            await mermaid.parse(source);
-        } catch (_) {
-            // Invalid mermaid — convert back to a normal code block
-            convertToCodeBlock(block, source);
-            return;
-        }
-
         try {
             const { svg } = await mermaid.render(block.id + '-svg', source);
             block.innerHTML = svg;
         } catch (err) {
+            console.warn('Mermaid render failed for block', block.id, err);
             // Render failed — remove any error elements mermaid injected
             document.querySelectorAll('#d' + block.id + '-svg').forEach(el => el.remove());
             convertToCodeBlock(block, source);
         }
-    });
-    await Promise.all(promises);
+    }
 
     // Clean up any stray mermaid error elements
     document.querySelectorAll('[id^="d"][id$="-svg"]').forEach(el => {
