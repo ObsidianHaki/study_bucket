@@ -21,13 +21,14 @@
         bottom: 0;
         width: 300px;
         max-width: 85vw;
-        z-index: 50;
+        z-index: 51;
         transform: translateX(-100%);
         transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         box-shadow: none;
         border-right: 1px solid var(--border-color);
         opacity: 1;
         pointer-events: auto;
+        -webkit-overflow-scrolling: touch;
     }
 
     .sidebar.collapsed {
@@ -52,13 +53,14 @@
         bottom: 0;
         width: 280px;
         max-width: 85vw;
-        z-index: 50;
+        z-index: 51;
         transform: translateX(100%);
         transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         box-shadow: none;
         border-left: 1px solid var(--border-color);
         opacity: 1;
         pointer-events: auto;
+        -webkit-overflow-scrolling: touch;
     }
 
     .chat-sidebar.collapsed {
@@ -123,6 +125,30 @@
         font-size: 13px;
     }
 
+    /* Viz containers: full width, scrollable on mobile */
+    .viz-container {
+        margin: 10px -4px;
+        border-radius: 10px;
+    }
+
+    .html-preview {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .html-preview iframe {
+        min-height: 280px;
+        max-height: 700px;
+    }
+
+    .viz-header {
+        padding: 8px 12px;
+    }
+
+    .viz-label {
+        font-size: 10px;
+    }
+
     .meta-panel {
         margin-left: 0;
         max-width: 100%;
@@ -184,17 +210,74 @@
         padding: 7px 10px;
     }
 
+    /* Bigger touch targets for session items on mobile */
+    .session-item {
+        padding: 14px 12px;
+        min-height: 52px;
+        gap: 10px;
+        -webkit-tap-highlight-color: rgba(124, 58, 237, 0.15);
+        cursor: pointer;
+        touch-action: manipulation;
+        -webkit-user-select: none;
+        user-select: none;
+        position: relative;
+        z-index: 1;
+    }
+
+    .session-item .session-title {
+        font-size: 14px;
+    }
+
+    .session-item .session-date {
+        font-size: 12px;
+    }
+
     /* Always show session action button on mobile (no hover) */
     .session-actions-btn {
         opacity: 1;
+        min-width: 36px;
+        min-height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     .group-menu-btn {
         opacity: 1;
+        min-width: 36px;
+        min-height: 36px;
     }
 
     .session-delete {
         opacity: 1;
+    }
+
+    /* Upload area: bigger tap target on mobile */
+    .upload-area {
+        min-height: 140px;
+        padding: 20px;
+        touch-action: manipulation;
+    }
+
+    .upload-area h3 {
+        font-size: 16px;
+    }
+
+    /* File items: bigger tap target */
+    .file-item {
+        padding: 12px;
+        min-height: 50px;
+    }
+
+    /* Sidebar content needs safe area padding on iOS */
+    .sidebar, .chat-sidebar {
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    /* Sessions list scrollable */
+    .sessions-list {
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior: contain;
     }
 
     /* Context menus: bottom sheet style on mobile */
@@ -244,11 +327,13 @@
 @media (max-width: 768px) {
     .library-overlay {
         padding: 12px;
+        -webkit-overflow-scrolling: touch;
     }
 
     .library-modal {
         max-height: 90vh;
         border-radius: var(--radius-xl);
+        touch-action: manipulation;
     }
 
     .library-header {

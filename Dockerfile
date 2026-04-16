@@ -1,5 +1,8 @@
 FROM python:3.14.2
 
+LABEL MAINTAINER="Loick Gandonou" 
+LABEL EMAIL="Loickgandonou03@icloud.com>"
+
 WORKDIR /code
 
 COPY ./requirements.txt /code/requirements.txt

@@ -4,33 +4,6 @@ function toggleTheme() {
     const next = current === 'light' ? 'dark' : 'light';
     document.documentElement.setAttribute('data-theme', next);
     localStorage.setItem('luni-theme', next);
-    // Update mermaid theme
-    mermaid.initialize({
-        ...mermaidConfig,
-        theme: next === 'light' ? 'default' : 'dark',
-        themeVariables: next === 'light' ? mermaidLightVars : mermaidDarkVars,
-    });
-    // Re-render all existing mermaid diagrams with the new theme
-    reRenderMermaidBlocks();
-}
-
-/** Re-render all already-rendered mermaid diagrams (e.g. after theme switch) */
-async function reRenderMermaidBlocks() {
-    const blocks = document.querySelectorAll('.mermaid-block[data-processed]');
-    for (const block of blocks) {
-        // Retrieve original source from the SVG's aria-label or stored data
-        let source = block.getAttribute('data-source');
-        if (!source) continue;
-
-        // Generate a fresh ID to avoid collisions
-        const newId = `mermaid-re-${++mermaidIdCounter}`;
-        try {
-            const { svg } = await mermaid.render(newId + '-svg', source);
-            block.innerHTML = svg;
-        } catch (_) {
-            // Leave the existing render in place if re-render fails
-        }
-    }
 }
 
 // Restore saved theme on load
@@ -117,157 +90,6 @@ if (Prism.plugins.autoloader) {
     Prism.plugins.autoloader.languages_path = 'https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/';
 }
 
-// --- Mermaid initialization ---
-const mermaidDarkVars = {
-    // Core palette
-    primaryColor: '#7c3aed',
-    primaryTextColor: '#f0f0f5',
-    primaryBorderColor: '#a78bfa',
-    lineColor: '#6366f1',
-    secondaryColor: '#1e1b4b',
-    tertiaryColor: '#172554',
-    // Backgrounds
-    background: 'transparent',
-    mainBkg: '#1c1c2e',
-    nodeBorder: '#818cf8',
-    clusterBkg: '#0f0f1a',
-    clusterBorder: '#4338ca',
-    // Text
-    titleColor: '#e0e7ff',
-    edgeLabelBackground: '#1c1c2e',
-    textColor: '#c7d2fe',
-    labelTextColor: '#e0e7ff',
-    // Sequence diagrams
-    signalColor: '#a78bfa',
-    signalTextColor: '#e0e7ff',
-    actorBkg: '#1c1c2e',
-    actorBorder: '#7c3aed',
-    actorTextColor: '#e0e7ff',
-    actorLineColor: '#4338ca',
-    activationBorderColor: '#a78bfa',
-    activationBkgColor: '#312e81',
-    sequenceNumberColor: '#ffffff',
-    // Notes
-    noteBkgColor: '#1e1b4b',
-    noteTextColor: '#e0e7ff',
-    noteBorderColor: '#4338ca',
-    // State & class diagrams
-    labelBoxBkgColor: '#1c1c2e',
-    labelBoxBorderColor: '#4338ca',
-    // Pie
-    pie1: '#7c3aed',
-    pie2: '#6366f1',
-    pie3: '#818cf8',
-    pie4: '#a78bfa',
-    pie5: '#c4b5fd',
-    pie6: '#4f46e5',
-    pie7: '#4338ca',
-    // Gantt
-    gridColor: '#1e1b4b',
-    doneTaskBkgColor: '#7c3aed',
-    activeTaskBkgColor: '#4f46e5',
-    taskBkgColor: '#312e81',
-    taskBorderColor: '#6366f1',
-    todayLineColor: '#f59e0b',
-    // Git
-    git0: '#7c3aed',
-    git1: '#6366f1',
-    git2: '#06b6d4',
-    git3: '#10b981',
-    git4: '#f59e0b',
-    git5: '#ef4444',
-    git6: '#ec4899',
-    git7: '#8b5cf6',
-    gitBranchLabel0: '#e0e7ff',
-};
-
-const mermaidLightVars = {
-    // Core palette
-    primaryColor: '#7c3aed',
-    primaryTextColor: '#1e1b4b',
-    primaryBorderColor: '#7c3aed',
-    lineColor: '#6d28d9',
-    secondaryColor: '#ede9fe',
-    tertiaryColor: '#ddd6fe',
-    // Backgrounds
-    background: 'transparent',
-    mainBkg: '#f5f3ff',
-    nodeBorder: '#7c3aed',
-    clusterBkg: '#faf5ff',
-    clusterBorder: '#a78bfa',
-    // Text
-    titleColor: '#1e1b4b',
-    edgeLabelBackground: '#ffffff',
-    textColor: '#312e81',
-    labelTextColor: '#1e1b4b',
-    nodeTextColor: '#1e1b4b',
-    // Sequence diagrams
-    signalColor: '#6d28d9',
-    signalTextColor: '#1e1b4b',
-    actorBkg: '#f5f3ff',
-    actorBorder: '#7c3aed',
-    actorTextColor: '#1e1b4b',
-    actorLineColor: '#a78bfa',
-    activationBorderColor: '#7c3aed',
-    activationBkgColor: '#ede9fe',
-    sequenceNumberColor: '#ffffff',
-    // Notes
-    noteBkgColor: '#faf5ff',
-    noteTextColor: '#1e1b4b',
-    noteBorderColor: '#c4b5fd',
-    // State & class diagrams
-    labelBoxBkgColor: '#f5f3ff',
-    labelBoxBorderColor: '#a78bfa',
-    // Pie
-    pie1: '#7c3aed',
-    pie2: '#6366f1',
-    pie3: '#8b5cf6',
-    pie4: '#a78bfa',
-    pie5: '#c4b5fd',
-    pie6: '#4f46e5',
-    pie7: '#4338ca',
-    // Gantt
-    gridColor: '#e5e7eb',
-    doneTaskBkgColor: '#7c3aed',
-    activeTaskBkgColor: '#8b5cf6',
-    taskBkgColor: '#ede9fe',
-    taskBorderColor: '#a78bfa',
-    todayLineColor: '#f59e0b',
-    // Git
-    git0: '#7c3aed',
-    git1: '#6366f1',
-    git2: '#0891b2',
-    git3: '#059669',
-    git4: '#d97706',
-    git5: '#dc2626',
-    git6: '#db2777',
-    git7: '#7c3aed',
-    gitBranchLabel0: '#1e1b4b',
-};
-
-const mermaidConfig = {
-    startOnLoad: false,
-    suppressErrorRendering: true,
-    securityLevel: 'loose',
-    fontFamily: 'Inter, -apple-system, sans-serif',
-    fontSize: 14,
-    flowchart: { htmlLabels: true, curve: 'basis', useMaxWidth: true, padding: 16, nodeSpacing: 50, rankSpacing: 60 },
-    sequence: { mirrorActors: false, bottomMarginAdj: 2, actorFontSize: 13, noteFontSize: 12, messageFontSize: 13, boxMargin: 8, noteMargin: 12, useMaxWidth: true },
-    pie: { useMaxWidth: true, textPosition: 0.75 },
-    gantt: { useMaxWidth: true, fontSize: 12, barHeight: 24, barGap: 6, topPadding: 40, sectionFontSize: 13, numberSectionStyles: 4 },
-    mindmap: { useMaxWidth: true, padding: 16 },
-    themeVariables: {},
-};
-
-const savedTheme = localStorage.getItem('luni-theme') || 'dark';
-mermaid.initialize({
-    ...mermaidConfig,
-    theme: savedTheme === 'light' ? 'default' : 'dark',
-    themeVariables: savedTheme === 'light' ? mermaidLightVars : mermaidDarkVars,
-});
-
-let mermaidIdCounter = 0;
-
 // --- Markdown rendering ---
 
 /**
@@ -286,54 +108,86 @@ function renderContentStreaming(text) {
 function renderContent(text) {
     let html = marked.parse(text);
 
-    // Post-process: replace mermaid code blocks with render containers
+    // Post-process: replace mermaid code blocks with sandboxed iframe previews
     html = html.replace(
         /<pre><code class="language-mermaid">([\s\S]*?)<\/code>\s*<\/pre>/g,
         (_, code) => {
-            const id = `mermaid-${++mermaidIdCounter}`;
-            // Use a temporary element to reliably decode all HTML entities
             const tmp = document.createElement('textarea');
             tmp.innerHTML = code;
-            const decoded = tmp.value;
+            const decoded = tmp.value.trim();
 
-            // Detect diagram type for a better label
-            const firstLine = decoded.trim().split('\n')[0].toLowerCase();
+            // Sanitize mermaid source: auto-quote node labels containing special chars
+            // Only for graph/flowchart diagrams where [/text/] is misread as shapes
+            const firstLineLower = decoded.split('\n')[0].trim().toLowerCase();
+            const isGraph = firstLineLower.startsWith('graph') || firstLineLower.startsWith('flowchart');
+            const sanitized = isGraph
+                ? decoded.replace(
+                    /\[([^\]"]*[\/\\{}()][^\]"]*)\]/g,
+                    (m, inner) => '["' + inner + '"]'
+                  )
+                : decoded;
+
+            // Detect current theme for mermaid color config
+            const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+
+            // Build a self-contained HTML page that loads mermaid in the iframe
+            const mermaidHtml = `<pre id="src" style="display:none">${sanitized.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</pre>
+<div id="diagram" style="display:flex;justify-content:center;padding:24px;background:transparent;min-height:300px;overflow-x:auto;"></div>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"><\/script>
+<script>
+var isLight=${isLight};
+mermaid.initialize({startOnLoad:false,fontSize:16,
+  theme:isLight?'default':'dark',
+  themeVariables:isLight?{
+    primaryColor:'#7c3aed',primaryTextColor:'#1e1b4b',primaryBorderColor:'#7c3aed',
+    lineColor:'#6d28d9',secondaryColor:'#ede9fe',tertiaryColor:'#ddd6fe',
+    background:'transparent',mainBkg:'#f5f3ff',nodeBorder:'#7c3aed',
+    clusterBkg:'#faf5ff',clusterBorder:'#a78bfa',
+    titleColor:'#1e1b4b',edgeLabelBackground:'#ffffff',textColor:'#312e81',
+    labelTextColor:'#1e1b4b',nodeTextColor:'#1e1b4b',
+    signalColor:'#6d28d9',signalTextColor:'#1e1b4b',
+    actorBkg:'#f5f3ff',actorBorder:'#7c3aed',actorTextColor:'#1e1b4b',
+    actorLineColor:'#a78bfa',noteBkgColor:'#faf5ff',noteTextColor:'#1e1b4b',noteBorderColor:'#c4b5fd'
+  }:{
+    primaryColor:'#7c3aed',primaryTextColor:'#e0e7ff',primaryBorderColor:'#a78bfa',
+    lineColor:'#6366f1',secondaryColor:'#1e1b4b',tertiaryColor:'#172554',
+    background:'transparent',mainBkg:'#1c1c2e',nodeBorder:'#818cf8',
+    clusterBkg:'#0f0f1a',clusterBorder:'#4338ca',
+    titleColor:'#e0e7ff',edgeLabelBackground:'#1c1c2e',textColor:'#c7d2fe',
+    labelTextColor:'#e0e7ff',
+    signalColor:'#a78bfa',signalTextColor:'#e0e7ff',
+    actorBkg:'#1c1c2e',actorBorder:'#7c3aed',actorTextColor:'#e0e7ff',
+    actorLineColor:'#4338ca',noteBkgColor:'#1e1b4b',noteTextColor:'#e0e7ff',noteBorderColor:'#4338ca'
+  },
+  flowchart:{htmlLabels:true,curve:'basis',useMaxWidth:false,padding:24,nodeSpacing:60,rankSpacing:70},
+  sequence:{mirrorActors:false,useMaxWidth:false,actorFontSize:15,noteFontSize:14,messageFontSize:14,boxMargin:12},
+  mindmap:{useMaxWidth:false,padding:20}
+});
+var src=document.getElementById('src').textContent.trim();
+mermaid.render('mmd',src).then(function(r){document.getElementById('diagram').innerHTML=r.svg;}).catch(function(e){document.getElementById('diagram').innerHTML='<pre style="color:#f87171;padding:12px;">Diagram error: '+e.message+'<\\/pre>';});
+<\/script>`;
+            const encodedSrc = encodeURIComponent(mermaidHtml);
+
+            // Detect diagram type for the label
+            const firstLine = decoded.split('\n')[0].trim().toLowerCase();
             let diagramType = 'Diagram';
-            let diagramIcon = '<circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>';
-            if (firstLine.startsWith('flowchart') || firstLine.startsWith('graph')) {
-                diagramType = 'Flowchart';
-                diagramIcon = '<path d="M22 12h-4l-3 9L9 3l-3 9H2"/>';
-            } else if (firstLine.startsWith('sequencediagram') || firstLine.startsWith('sequence')) {
-                diagramType = 'Sequence';
-                diagramIcon = '<line x1="17" y1="10" x2="3" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="14" x2="3" y2="14"/><line x1="17" y1="18" x2="3" y2="18"/>';
-            } else if (firstLine.startsWith('statemachine') || firstLine.includes('statediagram')) {
-                diagramType = 'State Machine';
-                diagramIcon = '<circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/>';
-            } else if (firstLine.startsWith('pie')) {
-                diagramType = 'Pie Chart';
-                diagramIcon = '<path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/>';
-            } else if (firstLine.startsWith('gantt')) {
-                diagramType = 'Gantt Chart';
-                diagramIcon = '<rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>';
-            } else if (firstLine.startsWith('mindmap')) {
-                diagramType = 'Mind Map';
-                diagramIcon = '<circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="8"/><line x1="12" y1="16" x2="12" y2="22"/><line x1="2" y1="12" x2="8" y2="12"/><line x1="16" y1="12" x2="22" y2="12"/>';
-            } else if (firstLine.startsWith('timeline')) {
-                diagramType = 'Timeline';
-                diagramIcon = '<circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>';
-            } else if (firstLine.startsWith('classd')) {
-                diagramType = 'Class Diagram';
-                diagramIcon = '<rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>';
-            } else if (firstLine.startsWith('erdiagram') || firstLine.startsWith('er')) {
-                diagramType = 'ER Diagram';
-                diagramIcon = '<ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>';
-            }
+            if (firstLine.startsWith('graph') || firstLine.startsWith('flowchart')) diagramType = 'Flowchart';
+            else if (firstLine.startsWith('sequence')) diagramType = 'Sequence';
+            else if (firstLine.startsWith('class')) diagramType = 'Class Diagram';
+            else if (firstLine.startsWith('state')) diagramType = 'State Machine';
+            else if (firstLine.startsWith('mindmap')) diagramType = 'Mind Map';
+            else if (firstLine.startsWith('timeline')) diagramType = 'Timeline';
+            else if (firstLine.startsWith('pie')) diagramType = 'Pie Chart';
+            else if (firstLine.startsWith('er')) diagramType = 'ER Diagram';
+            else if (firstLine.startsWith('gantt')) diagramType = 'Gantt Chart';
 
             return `<div class="viz-container viz-diagram">
                 <div class="viz-header">
-                    <span class="viz-label"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${diagramIcon}</svg> ${diagramType}</span>
+                    <span class="viz-label"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> ${diagramType}</span>
                 </div>
-                <div class="mermaid-block" id="${id}">${decoded}</div>
+                <div class="html-preview">
+                    <iframe sandbox="allow-scripts allow-same-origin" srcdoc="" data-src="${encodedSrc}" onload="initHtmlPreview(this)"></iframe>
+                </div>
             </div>`;
         }
     );
@@ -369,7 +223,7 @@ function renderContent(text) {
 /** Apply Prism.js syntax highlighting + code header to all code blocks */
 function highlightCode(container) {
     container.querySelectorAll('pre > code').forEach(block => {
-        if (block.classList.contains('language-mermaid')) return;
+
         const pre = block.parentElement;
         // Don't add header twice
         if (pre.querySelector('.code-header')) return;
@@ -650,7 +504,7 @@ function initHtmlPreview(iframe) {
     iframe.addEventListener('load', () => {
         try {
             const h = iframe.contentDocument.documentElement.scrollHeight;
-            iframe.style.height = Math.min(h + 20, 600) + 'px';
+            iframe.style.height = Math.min(h + 20, 900) + 'px';
         } catch (_) { /* cross-origin fallback */ }
     });
 }
@@ -673,47 +527,3 @@ function toggleVizCode(btn) {
     }
 }
 
-/** Render all pending mermaid blocks in a container element (sequentially to avoid id conflicts) */
-async function renderMermaidBlocks(container) {
-    const blocks = container.querySelectorAll('.mermaid-block:not([data-processed])');
-    for (const block of blocks) {
-        block.setAttribute('data-processed', 'true');
-        const source = block.textContent.trim();
-        // Store original source for re-rendering on theme switch
-        block.setAttribute('data-source', source);
-
-        try {
-            const { svg } = await mermaid.render(block.id + '-svg', source);
-            block.innerHTML = svg;
-        } catch (err) {
-            console.warn('Mermaid render failed for block', block.id, err);
-            // Render failed — remove any error elements mermaid injected
-            document.querySelectorAll('#d' + block.id + '-svg').forEach(el => el.remove());
-            convertToCodeBlock(block, source);
-        }
-    }
-
-    // Clean up any stray mermaid error elements
-    document.querySelectorAll('[id^="d"][id$="-svg"]').forEach(el => {
-        if (el.classList.contains('mermaid') || el.querySelector('.error-icon')) {
-            el.remove();
-        }
-    });
-}
-
-/** Convert a failed mermaid block back to a normal syntax-highlighted code block */
-function convertToCodeBlock(block, source) {
-    const vizContainer = block.closest('.viz-container');
-    if (vizContainer) {
-        // Replace the entire viz container with a plain pre/code block
-        const pre = document.createElement('pre');
-        const code = document.createElement('code');
-        code.className = 'language-text';
-        code.textContent = source;
-        pre.appendChild(code);
-        vizContainer.replaceWith(pre);
-        highlightCode(pre.parentElement || pre);
-    } else {
-        block.innerHTML = `<pre><code class="language-text">${escapeHtml(source)}</code></pre>`;
-    }
-}

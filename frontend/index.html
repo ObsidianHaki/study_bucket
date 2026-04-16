@@ -2,10 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>luni</title>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
     <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
@@ -124,12 +126,20 @@
             <div class="input-area">
                 <div class="input-inner">
                     <div class="input-wrapper">
+                        <div class="model-selector-container">
+                            <select id="modelSelector" class="model-selector" title="Select AI Model">
+                                <option value="claude-opus-4-7">Opus 4.7</option>
+                                <option value="claude-sonnet-4-6">Sonnet 4.6</option>
+                                <option value="claude-haiku-4-5-20251001" selected>Haiku 4.5</option>
+                            </select>
+                        </div>
+                        <div class="input-divider"></div>
                         <textarea id="questionInput" placeholder="Ask luni anything..." rows="1" onkeydown="handleKeyDown(event)"></textarea>
                         <button class="send-btn" id="sendBtn" onclick="sendMessage()">
                             <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
                         </button>
                     </div>
-                    <div class="input-hint">Enter to send &nbsp;&middot;&nbsp; Shift+Enter for new line &nbsp;&middot;&nbsp; <kbd>Ctrl+N</kbd> new chat &nbsp;&middot;&nbsp; <kbd>Ctrl+K</kbd> search</div>
+                    <div class="input-hint">Enter to send · Shift+Enter for new line · <kbd>Ctrl+N</kbd> new chat · <kbd>Ctrl+K</kbd> search</div>
                 </div>
             </div>
         </main>

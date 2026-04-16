@@ -82,7 +82,11 @@ async function sendMessage() {
     let responseMeta = null;
 
     try {
-        await sendQueryStream(question, currentSessionId, {
+        // Get selected model from the selector
+        const modelSelector = document.getElementById('modelSelector');
+        const selectedModel = modelSelector ? modelSelector.value : null;
+        
+        await sendQueryStream(question, currentSessionId, selectedModel, {
             onSession(sessionId) {
                 currentSessionId = sessionId;
                 loadSessions();
@@ -113,7 +117,6 @@ async function sendMessage() {
                 // Final render: full viz blocks + syntax highlighting
                 streamContent.innerHTML = renderContent(fullText);
                 highlightCode(streamContent);
-                renderMermaidBlocks(streamContent);
                 // Append metadata panel
                 if (responseMeta) {
                     streamMsg.appendChild(buildMetaPanel(responseMeta));
@@ -188,9 +191,6 @@ function appendMessage(text, role, meta) {
     messagesInner.appendChild(msg);
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
 
-    if (role === 'bot') {
-        renderMermaidBlocks(content);
-    }
 }
 
 function appendThinking() {
@@ -376,7 +376,21 @@ function createSessionItem(s, groupName) {
         <button class="session-actions-btn" onclick="event.stopPropagation(); showSessionContextMenu('${s._id}', ${groupName ? "'" + escapeHtml(groupName) + "'" : 'null'}, this)">
             <svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg>
         </button>`;
-    div.addEventListener('click', () => openSession(s._id));
+    // Use both click and touchend for reliable iOS support
+    div.setAttribute('role', 'button');
+    div.setAttribute('tabindex', '0');
+    div.addEventListener('click', (e) => {
+        if (!e.target.closest('.session-actions-btn')) openSession(s._id);
+    });
+    // iOS Safari: touchend fallback for portrait mode
+    let touchMoved = false;
+    div.addEventListener('touchstart', () => { touchMoved = false; }, {passive: true});
+    div.addEventListener('touchmove', () => { touchMoved = true; }, {passive: true});
+    div.addEventListener('touchend', (e) => {
+        if (touchMoved || e.target.closest('.session-actions-btn')) return;
+        e.preventDefault();
+        openSession(s._id);
+    });
     return div;
 }
 

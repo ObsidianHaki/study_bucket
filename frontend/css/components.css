@@ -1,4 +1,4 @@
-/* ===== VISUALIZATION CONTAINERS (mermaid diagrams, HTML previews) ===== */
+/* ===== VISUALIZATION CONTAINERS (ECharts & HTML previews) ===== */
 .viz-container {
     margin: 14px 0;
     border: 1px solid var(--border-color);
@@ -104,24 +104,6 @@
     color: #059669;
 }
 
-.mermaid-block {
-    padding: 28px 24px;
-    display: flex;
-    justify-content: center;
-    overflow-x: auto;
-    min-height: 100px;
-    position: relative;
-    background:
-        radial-gradient(circle at 20% 30%, rgba(124, 58, 237, 0.03) 0%, transparent 50%),
-        radial-gradient(circle at 80% 70%, rgba(99, 102, 241, 0.02) 0%, transparent 50%);
-}
-
-.mermaid-block svg {
-    max-width: none;
-    height: auto;
-    min-width: 300px;
-    filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.15));
-}
 
 .html-preview {
     padding: 0;
@@ -130,8 +112,8 @@
 
 .html-preview iframe {
     width: 100%;
-    min-height: 200px;
-    max-height: 600px;
+    min-height: 350px;
+    max-height: 900px;
     border: none;
     display: block;
     background: var(--bg-primary);
@@ -1305,6 +1287,58 @@
     color: var(--text-secondary);
 }
 
+/* ===== MODEL SELECTOR ===== */
+.model-selector-container {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.model-selector {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 500;
+    padding: 4px 20px 4px 8px;
+    cursor: pointer;
+    outline: none;
+    transition: all 0.2s ease;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 6px center;
+    border-radius: var(--radius-sm);
+    min-width: 80px;
+}
+
+.model-selector:hover {
+    background-color: var(--bg-elevated);
+    color: var(--text-secondary);
+}
+
+.model-selector:focus {
+    background-color: var(--bg-elevated);
+    color: var(--text-primary);
+}
+
+.model-selector option {
+    background: var(--bg-card);
+    color: var(--text-primary);
+    font-size: 12px;
+    padding: 8px;
+}
+
+.input-divider {
+    width: 1px;
+    height: 20px;
+    background: var(--border-color);
+    margin: 0 4px;
+    flex-shrink: 0;
+}
+
 /* ===== TOAST ===== */
 .toast {
     position: fixed;
@@ -1629,8 +1663,6 @@
     position: fixed;
     inset: 0;
     background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
     z-index: 49;
     opacity: 0;
     pointer-events: none;
@@ -2186,15 +2218,6 @@
     background: var(--bg-tertiary);
 }
 
-[data-theme="light"] .mermaid-block {
-    background:
-        radial-gradient(circle at 20% 30%, rgba(124, 58, 237, 0.02) 0%, transparent 50%),
-        radial-gradient(circle at 80% 70%, rgba(99, 102, 241, 0.015) 0%, transparent 50%);
-}
-
-[data-theme="light"] .mermaid-block svg {
-    filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.06));
-}
 
 /* Library */
 [data-theme="light"] .library-modal {
@@ -2744,19 +2767,3 @@
     color: #4f46e5;
 }
 
-/* ========== Mermaid SVG polish ========== */
-.mermaid-block svg .node rect,
-.mermaid-block svg .node circle,
-.mermaid-block svg .node ellipse,
-.mermaid-block svg .node polygon {
-    rx: 8;
-    ry: 8;
-}
-
-.mermaid-block svg .edgePath path {
-    stroke-width: 2;
-}
-
-.mermaid-block svg text {
-    font-family: 'Inter', -apple-system, sans-serif !important;
-}

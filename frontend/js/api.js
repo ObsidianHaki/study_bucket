@@ -13,10 +13,13 @@ async function uploadFileToServer(file) {
  * Send a query and read the SSE stream.
  * Calls onSession(sessionId) once, onToken(text) per chunk, onDone() at end.
  */
-async function sendQueryStream(question, sessionId, { onSession, onToken, onDone, onMeta }) {
+async function sendQueryStream(question, sessionId, model, { onSession, onToken, onDone, onMeta }) {
     let url = `${API_BASE}/query?question=${encodeURIComponent(question)}`;
     if (sessionId) {
         url += `&session_id=${encodeURIComponent(sessionId)}`;
+    }
+    if (model) {
+        url += `&model=${encodeURIComponent(model)}`;
     }
 
     const res = await fetch(url, { method: 'POST' });
