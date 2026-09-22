@@ -12,14 +12,18 @@ async function uploadFileToServer(file) {
 /**
  * Send a query and read the SSE stream.
  * Calls onSession(sessionId) once, onToken(text) per chunk, onDone() at end.
+ * `documents` scopes retrieval to those filenames; empty = all documents.
  */
-async function sendQueryStream(question, sessionId, model, { onSession, onToken, onDone, onMeta }) {
+async function sendQueryStream(question, sessionId, model, documents, { onSession, onToken, onDone, onMeta }) {
     let url = `${API_BASE}/query?question=${encodeURIComponent(question)}`;
     if (sessionId) {
         url += `&session_id=${encodeURIComponent(sessionId)}`;
     }
     if (model) {
         url += `&model=${encodeURIComponent(model)}`;
+    }
+    for (const doc of documents || []) {
+        url += `&documents=${encodeURIComponent(doc)}`;
     }
 
     const res = await fetch(url, { method: 'POST' });
@@ -109,6 +113,15 @@ async function renameSessionById(sessionId, title) {
         body: JSON.stringify({ title }),
     });
     if (!res.ok) throw new Error('Failed to rename session');
+}
+
+async function setSessionDocuments(sessionId, documents) {
+    const res = await fetch(`${API_BASE}/sessions/${sessionId}/documents`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ documents }),
+    });
+    if (!res.ok) throw new Error('Failed to update chat sources');
 }
 
 async function deleteSessionById(sessionId) {

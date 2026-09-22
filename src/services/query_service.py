@@ -3,7 +3,12 @@ from collections.abc import AsyncGenerator
 
 from ..db.vector_db.chroma_client import get_collection
 from ..ai.anthropic_llm import stream_llm_response
-from .chat_history_service import create_session, add_message, get_session
+from .chat_history_service import (
+    create_session,
+    add_message,
+    get_session,
+    set_session_documents,
+)
 
 collection = get_collection()
 
@@ -71,17 +76,40 @@ Rules:
 - For shell commands, use ```bash and include comments explaining each step."""
 
 
+def _build_documents_filter(documents: list[str]) -> dict | None:
+    """Chroma `where` filter restricting retrieval to the given filenames. None = no filter."""
+    if not documents:
+        return None
+    if len(documents) == 1:
+        return {"filename": documents[0]}
+    return {"filename": {"$in": documents}}
+
+
 async def query(
-    question: str, session_id: str | None = None, model: str | None = None
+    question: str,
+    session_id: str | None = None,
+    model: str | None = None,
+    documents: list[str] | None = None,
 ) -> dict:
-    """Prepare context and return session_id + streaming generator + retrieval metadata."""
+    """Prepare context and return session_id + streaming generator + retrieval metadata.
+
+    `documents` scopes retrieval to those filenames and is persisted on the session;
+    None or empty means search across all documents.
+    """
+    documents = documents or []
     if session_id is None:
-        session_id = create_session(question)
+        session_id = create_session(question, documents)
+    else:
+        set_session_documents(session_id, documents)
 
     add_message(session_id, "user", question)
 
     t_retrieval_start = time.perf_counter()
-    results = collection.query(query_texts=[question], n_results=5)
+    results = collection.query(
+        query_texts=[question],
+        n_results=5,
+        where=_build_documents_filter(documents),
+    )
     retrieval_ms = round((time.perf_counter() - t_retrieval_start) * 1000)
 
     documents = results["documents"][0]
@@ -136,6 +164,7 @@ async def query(
             "total_ms": retrieval_ms + duration_ms,
             "chunks_retrieved": len(retrieved_chunks),
             "chunks": retrieved_chunks,
+            "documents_scope": documents,
             **llm_meta,
         }
         # Persist the complete response + metadata

@@ -1,19 +1,23 @@
 services:
   luni:
     env_file: ".env"
-    image: mrblackbeard884/luni:latest 
+    build: .
     ports:
       - "8000:8000"
     volumes:
       - chroma_docker:/chroma
+      - hf_models:/models
     depends_on:
       - mongo
+
   mongo:
+    image: mongo:7
     ports:
       - "27017:27017"
-    image: mongo
     volumes:
-      - mongodb_docker:/data/db
+      - mongodb7_docker:/data/db
+
 volumes:
-  chroma_docker:  
-  mongodb_docker:
+  chroma_docker:
+  mongodb7_docker:
+  hf_models:

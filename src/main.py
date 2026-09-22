@@ -22,7 +22,7 @@ app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
-    allow_methods=["GET", "POST", "PATCH", "DELETE"],
+    allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE"],
     allow_headers=["*"],
 )
 
@@ -32,9 +32,20 @@ app.include_router(chat_router)
 app.include_router(group_router)
 
 frontend_dir = Path(__file__).parent.parent / "frontend"
-app.mount("/static", StaticFiles(directory=frontend_dir), name="static")
+
+
+class RevalidatedStaticFiles(StaticFiles):
+    """Make browsers revalidate assets (cheap via ETag) so HTML and CSS/JS never get out of sync."""
+
+    def file_response(self, *args, **kwargs):
+        response = super().file_response(*args, **kwargs)
+        response.headers["Cache-Control"] = "no-cache"
+        return response
+
+
+app.mount("/static", RevalidatedStaticFiles(directory=frontend_dir), name="static")
 
 
 @app.get("/")
 def serve_frontend():
-    return FileResponse(frontend_dir / "index.html")
+    return FileResponse(frontend_dir / "index.html", headers={"Cache-Control": "no-cache"})
