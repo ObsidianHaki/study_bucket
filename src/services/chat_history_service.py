@@ -8,11 +8,12 @@ logger = logging.getLogger(__name__)
 sessions = MONGO_CLIENT.get_collection(CHAT_SESSIONS_COLLECTION)
 
 
-def create_session(first_message: str) -> str:
+def create_session(first_message: str, documents: list[str] | None = None) -> str:
     """Create a new chat session. Returns the session_id as a string."""
     title = first_message[:50] + ("..." if len(first_message) > 50 else "")
     doc = {
         "title": title,
+        "documents": documents or [],
         "messages": [],
         "created_at": datetime.now(timezone.utc),
         "updated_at": datetime.now(timezone.utc),
@@ -62,6 +63,15 @@ def get_all_sessions() -> list[dict]:
         doc["_id"] = str(doc["_id"])
         result.append(doc)
     return result
+
+
+def set_session_documents(session_id: str, documents: list[str]) -> bool:
+    """Set the documents a session's retrieval is scoped to. Empty list = all documents."""
+    result = sessions.update_one(
+        {"_id": ObjectId(session_id)},
+        {"$set": {"documents": documents}},
+    )
+    return result.matched_count > 0
 
 
 def rename_session(session_id: str, new_title: str) -> bool:

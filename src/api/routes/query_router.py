@@ -34,8 +34,9 @@ async def send_query(
     question: str,
     session_id: str | None = Query(default=None),
     model: str | None = Query(default=None),
+    documents: list[str] | None = Query(default=None),
 ) -> StreamingResponse:
-    result = await query(question, session_id, model)
+    result = await query(question, session_id, model, documents)
     return StreamingResponse(
         _event_stream(result["session_id"], result["stream"]),
         media_type="text/event-stream",

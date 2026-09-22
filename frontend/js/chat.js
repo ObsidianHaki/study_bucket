@@ -18,7 +18,7 @@ const thinkingStatuses = [
 // Auto-resize textarea
 questionInput.addEventListener('input', () => {
     questionInput.style.height = 'auto';
-    questionInput.style.height = Math.min(questionInput.scrollHeight, 120) + 'px';
+    questionInput.style.height = Math.min(questionInput.scrollHeight, 200) + 'px';
 });
 
 function handleKeyDown(e) {
@@ -86,7 +86,7 @@ async function sendMessage() {
         const modelSelector = document.getElementById('modelSelector');
         const selectedModel = modelSelector ? modelSelector.value : null;
         
-        await sendQueryStream(question, currentSessionId, selectedModel, {
+        await sendQueryStream(question, currentSessionId, selectedModel, getSelectedDocuments(), {
             onSession(sessionId) {
                 currentSessionId = sessionId;
                 loadSessions();
@@ -220,6 +220,7 @@ function clearChat() {
 
 function startNewChat() {
     currentSessionId = null;
+    setSelectedDocuments([]);
     clearChat();
     if (welcomeScreen) welcomeScreen.style.display = 'flex';
     loadSessions();
@@ -600,6 +601,7 @@ async function openSession(sessionId) {
     try {
         const session = await fetchSession(sessionId);
         currentSessionId = sessionId;
+        setSelectedDocuments(session.documents || []);
         clearChat();
         if (welcomeScreen) welcomeScreen.style.display = 'none';
 
@@ -693,6 +695,12 @@ function buildMetaPanel(meta) {
                 <span class="meta-stat-label">Generation</span>
                 <span class="meta-stat-value">${formatDuration(meta.generation_ms)}</span>
             </div>
+            <div class="meta-stat meta-stat-wide">
+                <span class="meta-stat-label">Sources searched</span>
+                <span class="meta-stat-value">${meta.documents_scope && meta.documents_scope.length
+                    ? meta.documents_scope.map(escapeHtml).join(', ')
+                    : 'All books'}</span>
+            </div>
         </div>`;
 
     // Retrieved chunks
@@ -728,24 +736,35 @@ function formatDuration(ms) {
     return `${(ms / 1000).toFixed(1)}s`;
 }
 
-/** Calculate cost in USD based on model and token counts */
+// Anthropic API pricing in USD per million tokens (first-party rates, checked 2026-06)
+const MODEL_PRICING = {
+    'claude-fable-5-1':  { input: 10, output: 50 },
+    'claude-fable-5':    { input: 10, output: 50 },
+    'claude-opus-5':     { input: 5,  output: 25 },
+    'claude-opus-4-8':   { input: 5,  output: 25 },
+    'claude-opus-4-7':   { input: 5,  output: 25 },
+    'claude-opus-4-6':   { input: 5,  output: 25 },
+    'claude-sonnet-5':   { input: 2,  output: 10 },
+    'claude-sonnet-4-6': { input: 3,  output: 15 },
+    'claude-haiku-4-5':  { input: 1,  output: 5 },
+};
+
+/** Cost in USD for the given model and token counts, or null if the model's price is unknown. */
 function calculateCost(model, inputTokens, outputTokens) {
-    // Pricing per million tokens (USD)
-    const pricing = {
-        'claude-sonnet-4-20250514':  { input: 3, output: 15 },
-        'claude-sonnet-4':           { input: 3, output: 15 },
-        'claude-opus-4':             { input: 15, output: 75 },
-        'claude-haiku-4':            { input: 0.80, output: 4 },
-    };
-    // Find matching pricing by prefix
-    const key = Object.keys(pricing).find(k => (model || '').startsWith(k));
-    const rates = key ? pricing[key] : { input: 3, output: 15 };
-    const cost = (inputTokens * rates.input + outputTokens * rates.output) / 1_000_000;
-    return cost;
+    // Longest prefix wins, so 'claude-fable-5-1' isn't priced as 'claude-fable-5'
+    // and dated IDs like 'claude-haiku-4-5-20251001' still match
+    const key = Object.keys(MODEL_PRICING)
+        .filter(k => (model || '').startsWith(k))
+        .sort((a, b) => b.length - a.length)[0];
+    if (!key) return null;
+    const rates = MODEL_PRICING[key];
+    return (inputTokens * rates.input + outputTokens * rates.output) / 1_000_000;
 }
 
 function formatCost(cost) {
-    if (cost < 0.001) return `$${(cost * 100).toFixed(4)}c`;
+    if (cost == null) return '—';
+    if (cost === 0) return '$0';
+    if (cost < 0.0001) return '<$0.0001';
     if (cost < 0.01) return `$${cost.toFixed(4)}`;
     return `$${cost.toFixed(3)}`;
 }
@@ -779,6 +798,7 @@ document.addEventListener('keydown', (e) => {
     // Escape → close sidebars & menus
     if (e.key === 'Escape') {
         closeAllMenus();
+        closeScopePicker();
         if (isMobile()) closeAllMobileSidebars();
     }
 });

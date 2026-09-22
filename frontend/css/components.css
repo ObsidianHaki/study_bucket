@@ -1100,6 +1100,14 @@
     color: var(--text-primary);
 }
 
+.meta-stat-wide {
+    flex-basis: 100%;
+}
+
+.meta-stat-wide .meta-stat-value {
+    word-break: break-word;
+}
+
 .meta-chunks {
     border-top: 1px solid var(--border-color);
     padding-top: 12px;
@@ -1168,67 +1176,129 @@
 .input-inner {
     max-width: 780px;
     margin: 0 auto;
+    position: relative;
 }
 
 .input-wrapper {
     display: flex;
-    align-items: flex-end;
-    gap: 10px;
+    flex-direction: column;
+    gap: 4px;
     background: var(--bg-glass);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    border: 1px solid var(--border-color);
+    border: 1px solid var(--border-hover);
     border-radius: var(--radius-2xl);
-    padding: 6px 6px 6px 20px;
-    transition: all 0.2s ease;
+    padding: 12px 12px 10px;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
     position: relative;
-    box-shadow: var(--shadow-sm);
+    box-shadow: var(--shadow-md);
 }
 
 .input-wrapper:focus-within {
-    border-color: var(--accent-primary);
-    box-shadow: var(--shadow-sm), 0 0 0 3px rgba(124, 58, 237, 0.10), 0 0 20px rgba(124, 58, 237, 0.06);
+    border-color: var(--border-active);
+    box-shadow: var(--shadow-md), 0 0 0 4px var(--accent-soft);
 }
 
 .input-wrapper.thinking {
-    border-color: var(--accent-primary);
-    box-shadow: var(--shadow-sm), 0 0 0 3px rgba(124, 58, 237, 0.08);
+    border-color: var(--border-active);
+    box-shadow: var(--shadow-md), 0 0 0 4px var(--accent-soft);
 }
 
 .input-wrapper.thinking::before {
     content: '';
     position: absolute;
     bottom: 0;
-    left: 0;
+    left: 24px;
+    right: 24px;
     height: 2px;
-    width: 100%;
-    border-radius: 0 0 var(--radius-2xl) var(--radius-2xl);
+    border-radius: 2px;
     background: linear-gradient(90deg, transparent, var(--accent-secondary), transparent);
     animation: inputProgress 2s ease-in-out infinite;
 }
 
 .input-wrapper textarea {
-    flex: 1;
+    width: 100%;
     background: none;
     border: none;
     outline: none;
     color: var(--text-primary);
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    font-size: 14px;
-    line-height: 1.5;
+    font-size: 15px;
+    line-height: 1.55;
     resize: none;
-    max-height: 120px;
-    padding: 10px 0;
+    max-height: 200px;
+    padding: 2px 6px 6px;
 }
 
 .input-wrapper textarea::placeholder {
     color: var(--text-muted);
 }
 
+/* Toolbar under the textarea: chips left, send right */
+.composer-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.composer-chips {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 0;
+}
+
+.composer-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 32px;
+    min-width: 0;
+    padding: 0 10px 0 11px;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-full);
+    color: var(--text-secondary);
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.composer-chip:hover {
+    border-color: var(--border-hover);
+    color: var(--text-primary);
+}
+
+.composer-chip:focus-visible,
+.composer-chip:focus-within {
+    outline: none;
+    border-color: var(--border-active);
+}
+
+.composer-chip svg {
+    width: 14px;
+    height: 14px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    flex-shrink: 0;
+}
+
+.composer-chip .chip-chevron {
+    width: 12px;
+    height: 12px;
+    opacity: 0.6;
+}
+
 .send-btn {
-    width: 40px;
-    height: 40px;
-    border-radius: var(--radius-lg);
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius-full);
     background: linear-gradient(135deg, var(--accent-primary), #6d28d9);
     border: none;
     cursor: pointer;
@@ -1252,8 +1322,8 @@
 }
 
 .send-btn svg {
-    width: 18px;
-    height: 18px;
+    width: 16px;
+    height: 16px;
     stroke: white;
     fill: none;
     stroke-width: 2;
@@ -1287,56 +1357,289 @@
     color: var(--text-secondary);
 }
 
-/* ===== MODEL SELECTOR ===== */
-.model-selector-container {
-    display: flex;
-    align-items: center;
-    flex-shrink: 0;
-}
-
+/* ===== MODEL CHIP ===== */
 .model-selector {
     background: transparent;
     border: none;
-    color: var(--text-muted);
-    font-family: inherit;
-    font-size: 11px;
-    font-weight: 500;
-    padding: 4px 20px 4px 8px;
+    color: inherit;
+    font: inherit;
+    padding: 0;
     cursor: pointer;
     outline: none;
-    transition: all 0.2s ease;
     appearance: none;
     -webkit-appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 6px center;
-    border-radius: var(--radius-sm);
-    min-width: 80px;
-}
-
-.model-selector:hover {
-    background-color: var(--bg-elevated);
-    color: var(--text-secondary);
-}
-
-.model-selector:focus {
-    background-color: var(--bg-elevated);
-    color: var(--text-primary);
 }
 
 .model-selector option {
     background: var(--bg-card);
     color: var(--text-primary);
     font-size: 12px;
-    padding: 8px;
 }
 
-.input-divider {
-    width: 1px;
-    height: 20px;
-    background: var(--border-color);
-    margin: 0 4px;
+/* ===== SOURCE SCOPE PICKER ===== */
+.scope-btn {
+    max-width: 220px;
+}
+
+.scope-btn.active {
+    color: var(--accent-tertiary);
+    background: var(--accent-soft);
+    border-color: var(--border-active);
+}
+
+.scope-label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.scope-picker {
+    position: absolute;
+    bottom: calc(100% + 10px);
+    left: 0;
+    z-index: 50;
+    width: 360px;
+    max-width: 100%;
+    background: var(--bg-card);
+    border: 1px solid var(--border-hover);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    overflow: hidden;
+    display: none;
+    transform-origin: bottom left;
+}
+
+.scope-picker.visible {
+    display: flex;
+    flex-direction: column;
+    animation: scopePop 0.16s ease-out;
+}
+
+@keyframes scopePop {
+    from { opacity: 0; transform: translateY(6px) scale(0.98); }
+    to { opacity: 1; transform: none; }
+}
+
+.scope-picker-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 16px 16px 12px;
+}
+
+.scope-picker-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.scope-picker-subtitle {
+    margin-top: 2px;
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+.scope-clear-btn {
+    background: none;
+    border: none;
+    color: var(--accent-secondary);
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: var(--radius-sm);
+}
+
+.scope-clear-btn:hover {
+    background: var(--accent-soft);
+}
+
+.scope-search {
+    position: relative;
+    margin: 0 12px 8px;
+}
+
+.scope-search svg {
+    position: absolute;
+    left: 11px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 14px;
+    height: 14px;
+    stroke: var(--text-muted);
+    fill: none;
+    stroke-width: 2;
+    pointer-events: none;
+}
+
+.scope-search input {
+    width: 100%;
+    height: 36px;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    color: var(--text-primary);
+    font-family: inherit;
+    font-size: 13px;
+    padding: 0 12px 0 32px;
+    outline: none;
+    transition: border-color 0.15s ease;
+}
+
+.scope-search input::placeholder {
+    color: var(--text-muted);
+}
+
+.scope-search input:focus {
+    border-color: var(--border-active);
+}
+
+.scope-list {
+    max-height: 280px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 0 6px 6px;
+}
+
+.scope-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-size: 13px;
+    color: var(--text-primary);
+    transition: background 0.12s ease;
+}
+
+.scope-item:hover {
+    background: var(--bg-elevated);
+}
+
+.scope-item.selected {
+    background: var(--accent-soft);
+}
+
+.scope-item-icon {
+    width: 28px;
+    height: 28px;
     flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 7px;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-color);
+}
+
+.scope-item.selected .scope-item-icon {
+    background: var(--accent-glow);
+    border-color: var(--border-active);
+}
+
+.scope-item-icon svg {
+    width: 14px;
+    height: 14px;
+    stroke: var(--text-secondary);
+    fill: none;
+    stroke-width: 2;
+}
+
+.scope-item.selected .scope-item-icon svg {
+    stroke: var(--accent-tertiary);
+}
+
+.scope-item-name {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.scope-item input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.scope-check {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    border: 1.5px solid var(--border-hover);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.12s ease;
+}
+
+.scope-check svg {
+    width: 11px;
+    height: 11px;
+    stroke: white;
+    fill: none;
+    stroke-width: 3;
+    opacity: 0;
+}
+
+.scope-item input:checked + .scope-check {
+    background: var(--accent-primary);
+    border-color: var(--accent-primary);
+}
+
+.scope-item input:checked + .scope-check svg {
+    opacity: 1;
+}
+
+.scope-item input:focus-visible + .scope-check {
+    box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+.scope-list .context-menu-empty {
+    padding: 24px 12px;
+}
+
+.scope-picker-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 12px 10px 16px;
+    border-top: 1px solid var(--border-color);
+    font-size: 11px;
+    color: var(--text-muted);
+}
+
+.scope-done-btn {
+    height: 30px;
+    padding: 0 14px;
+    border: none;
+    border-radius: var(--radius-full);
+    background: var(--accent-primary);
+    color: white;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: filter 0.15s ease;
+}
+
+.scope-done-btn:hover {
+    filter: brightness(1.1);
+}
+
+[data-theme="light"] .scope-btn.active,
+[data-theme="light"] .scope-clear-btn {
+    color: var(--accent-primary);
+}
+
+[data-theme="light"] .scope-item.selected .scope-item-icon svg {
+    stroke: var(--accent-primary);
 }
 
 /* ===== TOAST ===== */

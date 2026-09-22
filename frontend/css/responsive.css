@@ -103,7 +103,8 @@
     }
 
     .input-wrapper {
-        padding: 3px 3px 3px 14px;
+        padding: 10px 8px 8px;
+        border-radius: var(--radius-xl);
     }
 
     .input-hint {
@@ -439,5 +440,42 @@
 
     .welcome-screen p {
         font-size: 12px;
+    }
+}
+/* Composer chips + source picker on mobile */
+@media (max-width: 768px) {
+    .scope-btn {
+        max-width: 140px;
+    }
+
+    .composer-chip {
+        padding: 0 9px;
+    }
+
+    /* Bottom sheet, like the other mobile menus */
+    .scope-picker.visible {
+        position: fixed;
+        left: 8px;
+        right: 8px;
+        bottom: 8px;
+        width: auto;
+        max-width: none;
+        max-height: 75vh;
+        z-index: 200;
+        border-radius: var(--radius-xl);
+    }
+
+    .scope-list {
+        max-height: none;
+        flex: 1;
+    }
+
+    .scope-item {
+        padding: 11px 10px;
+        font-size: 14px;
+    }
+
+    .scope-search input {
+        font-size: 16px;
     }
 }
